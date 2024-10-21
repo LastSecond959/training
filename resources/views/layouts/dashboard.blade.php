@@ -15,8 +15,8 @@
         </form>
 
         <!-- Ticket list -->
-        <table class="table table-hover ">
-            <thead>
+        <table class="table table-hover align-middle">
+            <thead class="table-dark">
                 <tr>
                     <th scope="col">Ticket ID</th>
                     <th scope="col">Title</th>
@@ -28,7 +28,7 @@
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody class="table-group-divider">
             @forelse ($tickets as $tkt)
                 <tr>
                     <th scope="row">{{ $tkt->id }}</th>
@@ -47,7 +47,5 @@
             </tbody>
         </table>
 
-        <!-- Pagination links -->
-        {{ $tickets->links() }} <!-- This will generate pagination links -->
     </div>
 @endsection

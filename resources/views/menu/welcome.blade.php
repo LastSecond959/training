@@ -25,9 +25,9 @@
                 border: none;
                 border-radius: 5px;
                 cursor: pointer;
-                transition: background-color 0.3s ease, transform 0.3s ease;
+                /* transition: background-color 0.3s ease, transform 0.3s ease; */
             }
-            .btn:hover {
+            .btn:hover, .btn:focus {
                 background-color: #02753c;
                 color: white;
                 transform: scale(1.1);
@@ -40,8 +40,8 @@
         <x-guest-layout>
             <!-- Tabs -->
             <div class="flex justify-center p-6">
-                <button id="loginTab" onclick="showLogin()" class="btn active">Login</button>
-                <button id="registerTab" onclick="showRegister()" class="btn inactive">Register</button>
+                <button type="button" id="loginTab" class="btn active" onclick="showLogin()">Login</button>
+                <button type="button" id="registerTab" class="btn inactive" onclick="showRegister()">Register</button>
             </div>
             
             <!-- Login Form -->

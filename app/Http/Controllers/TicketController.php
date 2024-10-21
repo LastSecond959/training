@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 
@@ -12,9 +13,13 @@ class TicketController extends Controller
      */
     public function index()
     {
-        $tickets = Auth::user()->role === 'admin' ? Ticket::all() : Ticket::where('requester_id', Auth::id())->get();
-
-        return view('dashboard', compact('tickets'));
+        if (Auth::check()) {
+            $tickets = Auth::user()->role === 'admin' ? Ticket::all() : Ticket::where('requester_id', Auth::id())->get();
+            
+            return view('layouts.dashboard', compact('tickets'));
+        }
+        
+        return view('menu.welcome');
     }
 
     /**

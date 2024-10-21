@@ -18,7 +18,11 @@ Route::middleware('auth')->group(function () {
     });
     
     Route::get('/dashboard', [TicketController::class, 'index'])->name('dashboard');
-    
+
+    Route::prefix('ticket')->name('ticket.')->group(function () {
+        Route::get('/create', [TicketController::class, 'create'])->name('create');
+        Route::post('/create', [TicketController::class, 'store'])->name('store');
+    });
 });
 
 require __DIR__.'/auth.php';

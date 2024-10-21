@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <img src="{{ asset('images\logo-cjfi.png') }}" alt="Company Logo" width="50" height="50">
+                        <img src="{{ asset('images\logo-cjfi.png') }}" alt="Company Logo" width="35" height="35">
                     </a>
                 </div>
 
@@ -14,6 +14,12 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('ticket.create')" :active="request()->routeIs('ticket.create')">
+                        {{ __('Create Ticket') }}
                     </x-nav-link>
                 </div>
             </div>

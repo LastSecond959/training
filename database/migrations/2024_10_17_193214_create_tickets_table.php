@@ -18,10 +18,10 @@ return new class extends Migration
             $table->foreignId('requester_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->enum('status', ['Open', 'In Progress', 'On Hold', 'Closed'])->default('Open');
             $table->enum('priority', ['Low', 'Urgent', 'Emergency'])->default('Low');
-            $table->foreignId('handler_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade')->nullable();
+            $table->foreignId('handler_id')->nullable()->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->text('notes')->nullable();
-            $table->timestamp('resolved_at')->nullable();
             $table->timestamps();
+            $table->timestamp('resolved_at')->nullable();
         });
     }
 

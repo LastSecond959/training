@@ -3,19 +3,21 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    <h2>
+    <h4>
         {{ Auth::user()->role === 'admin' ? 'List of Tickets' : 'My Tickets' }}
-    </h2>
+    </h4>
 
-    <div>
+    <div class="container-fluid px-5">
         <!-- Search bar -->
-        <form method="GET" action="{{ route('dashboard') }}">
-            <input type="text" name="search" placeholder="Search tickets" value="{{ request()->input('search') }}">
-            <button type="submit">Search</button>
-        </form>
+        <div class="d-flex justify-content-end">
+            <form method="GET" action="{{ route('dashboard') }}">
+                <input type="text" name="search" placeholder="Search tickets" value="{{ request()->input('search') }}">
+                <button type="submit">Search</button>
+            </form>
+        </div>
 
         <!-- Ticket list -->
-        <table class="table table-hover align-middle">
+        <table class="table table-hover table-bordered align-middle">
             <thead class="table-dark">
                 <tr>
                     <th scope="col">Ticket ID</th>
@@ -28,7 +30,7 @@
                 </tr>
             </thead>
 
-            <tbody class="table-group-divider">
+            <tbody>
             @forelse ($tickets as $tkt)
                 <tr>
                     <th scope="row">{{ $tkt->id }}</th>

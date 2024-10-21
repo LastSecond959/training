@@ -27,7 +27,7 @@ class TicketController extends Controller
      */
     public function create()
     {
-        //
+        return view('roleUser.createTicket');
     }
 
     /**
@@ -47,13 +47,12 @@ class TicketController extends Controller
             'title' => $validatedData['title'],
             'description' => $validatedData['description'],
             'requester_id' => Auth::id(),
-            'requester_dept' => Auth::user()->department,
             'status' => 'open',
             'priority' => $validatedData['priority'],
             'created_at' => now(),
         ]);
 
-        return redirect()->route('user.createTicket')->with('success', 'Ticket submitted successfully.');
+        return redirect()->route('ticket.create')->with('success', 'Ticket submitted successfully.');
     }
 
     /**

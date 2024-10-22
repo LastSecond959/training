@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="container">
-    <h3 class="py-4">Submit a Ticket</h3>
+    <h3 class="py-4">Create New Ticket</h3>
 
-    <form action="{{ route('ticket.create') }}" method="POST">
+    <form method="POST" action="{{ route('ticket.create') }}">
         @csrf
 
         <!-- Title Field -->

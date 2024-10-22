@@ -38,6 +38,10 @@
     </head>
     <body>
         <x-guest-layout>
+            <div class="flex justify-center">
+                <img src="{{ asset('images\logo-cjfi.png') }}" alt="Company Logo" width="60" height="60">
+            </div>
+
             <!-- Tabs -->
             <div class="flex justify-center p-6">
                 <button type="button" id="loginTab" class="btn active" onclick="showLogin()">Login</button>

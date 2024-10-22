@@ -15,7 +15,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
         <!-- Styles -->
-        <!-- <style>
+        <style>
             .bg-in-progress {
                 background-color: blue;
                 color: white;
@@ -50,7 +50,7 @@
                 background-color: limegreen;
                 color: white;
             }
-        </style> -->
+        </style>
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">

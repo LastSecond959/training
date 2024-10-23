@@ -15,6 +15,7 @@
             type="email"
             name="email"
             :value="old('email')"
+            placeholder="*@mail.com"
             required
             autofocus
             autocomplete="username"
@@ -23,7 +24,7 @@
     </div>
 
     <!-- Password -->
-    <div class="mt-4">
+    <div class="mt-3">
         <x-input-label for="password">
             {{ __('Password') }}<span class="text-red-600">*</span>
         </x-input-label>
@@ -44,7 +45,7 @@
             <input
                 id="remember_me"
                 type="checkbox"
-                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                class="rounded text-blue-500 border-blue-600 focus:ring-blue-500 shadow-md"
                 name="remember"
             />
             <span class="ms-2 text-sm text-gray-600">
@@ -54,10 +55,7 @@
 
         <!-- Forgot Password -->
         @if (Route::has('password.request'))
-            <!-- <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                {{ __('Forgot password?') }}
-            </a> -->
-            <button id="forgotPassword" onclick="forgotPassword()" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Forgot Password</button>
+            <a class="link-opacity-75-hover fs-6" onclick="forgotPassword()" href="{{ route('password.request') }}">{{ __('Forgot password?') }}</a>
         @endif
     </div>
 
@@ -67,9 +65,9 @@
         }
     </script>
 
-    <div class="flex items-center justify-center mt-4">
+    <div class="flex items-center justify-center mt-5">
         <x-primary-button>
-            {{ __('Log in') }}
+            <span class="text-lg">{{ __('Log In') }}</span>
         </x-primary-button>
     </div>
 </form>

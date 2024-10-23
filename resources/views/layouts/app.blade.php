@@ -16,13 +16,14 @@
 
         <!-- Styles -->
         <style>
+            
             .bg-in-progress {
                 background-color: blue;
                 color: white;
             }
 
-            .bg-resolved {
-                background-color: gray;
+            .bg-closed {
+                background-color: black;
                 color: white;
             }
 
@@ -37,17 +38,17 @@
             }
 
             .bg-urgent {
-                background-color: orange;
+                background-color: #ee7d21;
                 color: white;
             }
 
             .bg-emergency {
-                background-color: red;
+                background-color: #e5192e;
                 color: white;
             }
 
             .bg-low {
-                background-color: limegreen;
+                background-color: #20c997;
                 color: white;
             }
         </style>

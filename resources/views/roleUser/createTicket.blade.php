@@ -9,30 +9,32 @@
 
         <!-- Title Field -->
         <div class="mb-4">
-            <label for="title" class="block text-gray-700">Title</label>
-            <input type="text" name="title" id="title" class="form-control mt-1 w-full" required>
+            <label for="title" class="block text-black font-bold">Title</label>
+            <input type="text" name="title" id="title" class="rounded mt-1 w-full" required>
         </div>
 
         <!-- Description Field -->
         <div class="mb-4">
-            <label for="description" class="block text-gray-700">Description</label>
-            <textarea name="description" id="description" class="form-control mt-1 w-full" required></textarea>
+            <label for="description" class="block text-black font-bold">Description</label>
+            <textarea name="description" id="description" class="rounded mt-1 w-full" required></textarea>
         </div>
 
         <!-- Priority Field -->
-        <div class="mb-4">
-            <label for="priority" class="block text-gray-700">Priority</label>
-            <select name="priority" id="priority" class="form-control mt-1 w-full" required>
-                <option value="low">Low</option>
-                <option value="urgent">Urgent</option>
-                <option value="emergency">Emergency</option>
-            </select>
+        <div class="btn-group dropend mb-4">
+            <button class="btn btn-secondary dropdown-toggle px-4" type="button" data-bs-toggle="dropdown">
+                <span class="text-white font-bold">Priority</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><button type="button" class="dropdown-item">Low</button></li>
+                <li><button type="button" class="dropdown-item">Urgent</button></li>
+                <li><button type="button" class="dropdown-item">Emergency</button></li>
+            </ul>
         </div>
 
         <!-- Submit Button -->
-        <div>
-            <button type="submit" class="btn btn-primary">
-                Submit Ticket
+        <div class="d-grid mt-5">
+            <button type="submit" class="btn btn-success py-3">
+                <span class="text-white font-bold fs-5">Submit Ticket</span>
             </button>
         </div>
     </form>

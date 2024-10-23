@@ -52,7 +52,7 @@ class TicketController extends Controller
             'created_at' => now(),
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Ticket created successfully.');
+        return redirect()->route('dashboard');
     }
 
     /**

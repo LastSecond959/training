@@ -15,38 +15,40 @@
         <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"> -->
 
         <style>
-            .hidden {
-                display: none;
+            .btn.dropdown-toggle {
+                background-color: #03592E;
+                color: white;
+                transition: background-color 0.3s ease, transform 0.3s ease;
             }
-            .btn {
-                background-color: black;  /* Initial background color */
-                color: white;  /* Initial text color */
-                padding: 10px 20px;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                /* transition: background-color 0.3s ease, transform 0.3s ease; */
-            }
-            .btn:hover, .btn:focus {
+            .btn.dropdown-toggle:hover, .btn.dropdown-toggle:focus {
                 background-color: #02753c;
                 color: white;
                 transform: scale(1.1);
             }
-            .btn.active { background-color: #03592E; color: white; }
-            .btn.inactive { background-color: white; color: black; border: 1px solid black; }
         </style>
     </head>
     <body>
         <x-guest-layout>
-            <div class="flex justify-center">
+            <div class="d-flex justify-content-center pt-2 pb-3">
                 <img src="{{ asset('images\logo-cjfi.png') }}" alt="Company Logo" width="60" height="60">
             </div>
 
             <!-- Tabs -->
-            <div class="flex justify-center p-6">
-                <button type="button" id="loginTab" class="btn active" onclick="showLogin()">Login</button>
-                <button type="button" id="registerTab" class="btn inactive" onclick="showRegister()">Register</button>
+            <div class="d-flex justify-content-center btn-group pt-2 pb-3">
+                <button type="button" id="loginTab" class="btn btn-success active py-2" onclick="showLogin()">Login</button>
+                <button type="button" id="registerTab" class="btn btn-success py-2" onclick="showRegister()">Register</button>
             </div>
+            
+            <!-- Dropup Menu -->
+            <!-- <div class="d-flex justify-content-center dropup-center pt-6 pb-2">
+                <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    Login 
+                </button>
+                <ul class="dropdown-menu">
+                    <li><button type="button" class="dropdown-item text-center" onclick="showLogin()">Login</button></li>
+                    <li><button type="button" class="dropdown-item text-center" onclick="showRegister()">Register</button></li>
+                </ul>
+            </div> -->
             
             <!-- Login Form -->
             <div id="loginForm" class="p-2">
@@ -54,7 +56,7 @@
             </div>
 
             <!-- Register Form -->
-            <div id="registerForm" class="hidden p-2">
+            <div id="registerForm" class="p-2" style="display: none;">
                 @include('auth.register')
             </div>
         </x-guest-layout>
@@ -62,27 +64,34 @@
         <script>
             function showLogin() {
                 // Show login form and hide register form
-                document.getElementById('loginForm').classList.remove('hidden');
-                document.getElementById('registerForm').classList.add('hidden');
-
-                // Toggle button styles for Login
+                document.getElementById('loginForm').style.display = 'block';
+                document.getElementById('registerForm').style.display = 'none';
                 document.getElementById('loginTab').classList.add('active');
                 document.getElementById('registerTab').classList.remove('active');
-                document.getElementById('loginTab').classList.remove('inactive');
-                document.getElementById('registerTab').classList.add('inactive');
             }
-
+            
             function showRegister() {
                 // Show register form and hide login form
-                document.getElementById('loginForm').classList.add('hidden');
-                document.getElementById('registerForm').classList.remove('hidden');
-
-                // Toggle button styles for Register
+                document.getElementById('registerForm').style.display = 'block';
+                document.getElementById('loginForm').style.display = 'none';
                 document.getElementById('registerTab').classList.add('active');
                 document.getElementById('loginTab').classList.remove('active');
-                document.getElementById('registerTab').classList.remove('inactive');
-                document.getElementById('loginTab').classList.add('inactive');
             }
+
+            // Dropup Menu
+            // function showLogin() {
+            //     // Show login form and hide register form
+            //     document.getElementById('loginForm').style.display = 'block';
+            //     document.getElementById('registerForm').style.display = 'none';
+            //     document.querySelector('.dropdown-toggle').textContent = 'Login ';
+            // }
+
+            // function showRegister() {
+            //     // Show register form and hide login form
+            //     document.getElementById('registerForm').style.display = 'block';
+            //     document.getElementById('loginForm').style.display = 'none';
+            //     document.querySelector('.dropdown-toggle').textContent = 'Register ';
+            // }
         </script>
     </body>
 </html>

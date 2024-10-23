@@ -8,8 +8,8 @@
             <h4 class="d-flex align-items-center m-0">{{ Auth::user()->role === 'admin' ? 'List of Tickets' : 'My Tickets' }}</h4>
             <!-- Search bar -->
             <form method="GET" action="{{ route('dashboard') }}" class="d-flex">
-                <input type="text" name="search" placeholder="Search tickets" value="{{ request()->input('search') }}">
-                <button type="submit">Search</button>
+                <input class="rounded me-2 border-dark" type="search" name="search" placeholder="Search a ticket" value="{{ request()->input('search') }}">
+                <button class="btn btn-success" type="submit">Search</button>
             </form>
         </div>
 
@@ -34,8 +34,8 @@
                     <tr>
                         <th scope="row" class="py-2 px-3">T-{{ $tkt->id }}</th>
                         <td class="py-2 px-3">{{ $tkt->title }}</td>
-                        <td class="py-2 px-3"><span class="badge bg-{{ strtolower(str_replace(' ', '-', $tkt->status)) }}">{{ $tkt->status }}</span></td>
-                        <td class="py-2 px-3"><span class="badge bg-{{ strtolower(str_replace(' ', '-', $tkt->priority)) }}">{{ $tkt->priority }}</span></td>
+                        <td class="py-2 px-3"><span class="badge bg-{{ strtolower(str_replace(' ', '-', $tkt->status)) }} fs-6">{{ $tkt->status }}</span></td>
+                        <td class="py-2 px-3"><span class="badge bg-{{ strtolower(str_replace(' ', '-', $tkt->priority)) }} fs-6">{{ $tkt->priority }}</span></td>
                         <td class="py-2 px-3">{{ $tkt->handler_id ? $tkt->handler_id->name : 'Not assigned' }}</td>
                         <td class="py-2 px-3">
                             <div>

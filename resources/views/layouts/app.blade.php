@@ -16,38 +16,31 @@
 
         <!-- Styles -->
         <style>
-            
             .bg-in-progress {
                 background-color: blue;
                 color: white;
             }
-
             .bg-closed {
                 background-color: black;
                 color: white;
             }
-
             .bg-open {
                 background-color: green;
                 color: white;
             }
-
             .bg-on-hold {
                 background-color: yellow;
                 color: black;
             }
-
-            .bg-urgent {
+            .bg-urgent, .btn.bg-urgent:hover, .btn.bg-urgent:active, .btn.bg-urgent:focus {
                 background-color: #ee7d21;
                 color: white;
             }
-
-            .bg-emergency {
+            .bg-emergency, .btn.bg-emergency:hover, .btn.bg-emergency:active, .btn.bg-emergency:focus {
                 background-color: #e5192e;
                 color: white;
             }
-
-            .bg-low {
+            .bg-low, .btn.bg-low:hover, .btn.bg-low:active, .btn.bg-low:focus {
                 background-color: #20c997;
                 color: white;
             }

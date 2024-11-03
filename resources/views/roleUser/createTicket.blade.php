@@ -1,35 +1,45 @@
 @extends('layouts.app')
 
+@section('title', 'Create New Ticket')
+
 @section('content')
 <div class="container">
-    <h3 class="py-4">Create New Ticket</h3>
+    <h4 class="mt-2 py-4">Create New Ticket</h4>
 
     <form method="POST" action="{{ route('ticket.create') }}">
         @csrf
 
         <!-- Title Field -->
         <div class="mb-4">
-            <label for="title" class="block text-black font-bold">Title</label>
+            <label for="title" class="block text-black font-bold">
+                Title<span class="text-red-600">*</span>
+            </label>
             <input type="text" name="title" id="title" class="rounded mt-1 w-full" required>
         </div>
 
         <!-- Description Field -->
         <div class="mb-4">
-            <label for="description" class="block text-black font-bold">Description</label>
-            <textarea name="description" id="description" class="rounded mt-1 w-full" required></textarea>
+            <label for="description" class="block text-black font-bold">
+                Description<span class="text-red-600">*</span>
+            </label>
+            <textarea name="description" id="description" class="rounded mt-1 w-full" style="height: 250px" required></textarea>
         </div>
 
         <!-- Priority Field -->
-        <div class="btn-group dropend mb-4">
-            <button class="btn btn-secondary dropdown-toggle px-4" type="button" data-bs-toggle="dropdown">
-                <span class="text-white font-bold">Priority</span>
+        <label for="priority" class="block text-black font-bold">
+            Priority<span class="text-red-600">*</span>
+        </label>
+        <div class="btn-group dropend mb-5">
+            <button id="priorityDropdown" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" style="width: 150px;">
+                <span class="text-white font-bold">Set Priority</span>
             </button>
             <ul class="dropdown-menu">
-                <li><button type="button" class="dropdown-item">Low</button></li>
-                <li><button type="button" class="dropdown-item">Urgent</button></li>
-                <li><button type="button" class="dropdown-item">Emergency</button></li>
+                <li><button type="button" class="dropdown-item" onclick="changePriority('Low')">Low</button></li>
+                <li><button type="button" class="dropdown-item" onclick="changePriority('Urgent')">Urgent</button></li>
+                <li><button type="button" class="dropdown-item" onclick="changePriority('Emergency')">Emergency</button></li>
             </ul>
         </div>
+        <input type="hidden" id="priority" name="priority" value="{{ old('priority') }}" required>
 
         <!-- Submit Button -->
         <div class="d-grid mt-5">
@@ -37,6 +47,15 @@
                 <span class="text-white font-bold fs-5">Submit Ticket</span>
             </button>
         </div>
+        
+        <script>
+            function changePriority(priority) {
+                document.querySelector('.dropdown-toggle').textContent = priority;
+                document.getElementById('priority').value = priority.toLowerCase();
+                document.getElementById('priorityDropdown').classList.remove('btn-secondary', 'bg-low', 'bg-urgent', 'bg-emergency');
+                document.getElementById('priorityDropdown').classList.add('bg-' + priority.toLowerCase());
+            }
+        </script>
     </form>
 </div>
 @endsection

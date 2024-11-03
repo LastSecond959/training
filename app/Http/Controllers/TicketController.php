@@ -14,9 +14,9 @@ class TicketController extends Controller
     public function index()
     {
         if (Auth::check()) {
-            $tickets = Auth::user()->role === 'admin' ? Ticket::all() : Ticket::where('requester_id', Auth::id())->get();
+            $ticketList = Auth::user()->role === 'admin' ? Ticket::all() : Ticket::where('requester_id', Auth::id())->get();
             
-            return view('layouts.dashboard', compact('tickets'));
+            return view('layouts.dashboard', compact('ticketList'));
         }
         
         return view('menu.welcome');
@@ -41,7 +41,7 @@ class TicketController extends Controller
             'description' => 'required',
             'priority' => 'required|in:low,urgent,emergency',
         ]);
-
+        
         // Create a new ticket
         Ticket::create([
             'title' => $validatedData['title'],
@@ -49,7 +49,7 @@ class TicketController extends Controller
             'requester_id' => Auth::id(),
             'status' => 'open',
             'priority' => $validatedData['priority'],
-            'created_at' => now(),
+            'updated_at' => null,
         ]);
 
         return redirect()->route('dashboard');
@@ -58,9 +58,15 @@ class TicketController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Ticket $ticket)
+    public function show($id)
     {
-        //aaaaaaaaaaaaaaaaaaaa
+        // Show the ticket details
+        $ticket = Ticket::find($id);
+        if ($ticket->requester_id === Auth::id() || Auth::user()->role === 'admin') {
+            return view('roleUser.showTicket', compact('ticket'));
+        }
+
+        return redirect()->route('dashboard');
     }
 
     /**

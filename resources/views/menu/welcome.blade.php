@@ -16,14 +16,14 @@
 
         <style>
             .btn.dropdown-toggle {
-                background-color: #03592E;
+                background-color: #1F2937;
                 color: white;
                 transition: background-color 0.3s ease, transform 0.3s ease;
             }
             .btn.dropdown-toggle:hover, .btn.dropdown-toggle:focus {
-                background-color: #02753c;
+                background-color: #374151;
                 color: white;
-                transform: scale(1.1);
+                /* transform: scale(1.1); */
             }
         </style>
     </head>
@@ -34,12 +34,12 @@
             </div>
 
             <!-- Tabs -->
-            <div class="d-flex justify-content-center btn-group pt-2 pb-3">
-                <button type="button" id="loginTab" class="btn btn-success active py-2" onclick="showLogin()">Login</button>
-                <button type="button" id="registerTab" class="btn btn-success py-2" onclick="showRegister()">Register</button>
+            <div class="d-flex justify-content-center btn-group pt-2 pb-3" style="width: 100%;">
+                <button type="button" id="loginTab" class="btn btn-success active py-2 w-50" onclick="showLogin()">Login</button>
+                <button type="button" id="registerTab" class="btn btn-success py-2 w-50" onclick="showRegister()">Register</button>
             </div>
             
-            <!-- Dropup Menu -->
+            <!-- Dropup -->
             <!-- <div class="d-flex justify-content-center dropup-center pt-6 pb-2">
                 <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
                     Login 
@@ -62,16 +62,16 @@
         </x-guest-layout>
 
         <script>
+            // Show login form and hide register form
             function showLogin() {
-                // Show login form and hide register form
                 document.getElementById('loginForm').style.display = 'block';
                 document.getElementById('registerForm').style.display = 'none';
                 document.getElementById('loginTab').classList.add('active');
                 document.getElementById('registerTab').classList.remove('active');
             }
             
+            // Show register form and hide login form
             function showRegister() {
-                // Show register form and hide login form
                 document.getElementById('registerForm').style.display = 'block';
                 document.getElementById('loginForm').style.display = 'none';
                 document.getElementById('registerTab').classList.add('active');
@@ -79,15 +79,15 @@
             }
 
             // Dropup Menu
-            // function showLogin() {
             //     // Show login form and hide register form
+            // function showLogin() {
             //     document.getElementById('loginForm').style.display = 'block';
             //     document.getElementById('registerForm').style.display = 'none';
             //     document.querySelector('.dropdown-toggle').textContent = 'Login ';
             // }
 
-            // function showRegister() {
             //     // Show register form and hide login form
+            // function showRegister() {
             //     document.getElementById('registerForm').style.display = 'block';
             //     document.getElementById('loginForm').style.display = 'none';
             //     document.querySelector('.dropdown-toggle').textContent = 'Register ';

@@ -45,10 +45,10 @@
             <input
                 id="remember_me"
                 type="checkbox"
-                class="rounded text-blue-500 border-blue-600 focus:ring-blue-500 shadow-md"
+                class="rounded text-blue-500 border-black shadow-md"
                 name="remember"
             />
-            <span class="ms-2 text-sm text-gray-600">
+            <span class="ms-2 text-sm text-gray-700">
                 {{ __('Remember me') }}
             </span>
         </label>
@@ -66,8 +66,8 @@
     </script>
 
     <div class="flex items-center justify-center mt-5">
-        <x-primary-button>
-            <span class="text-lg">{{ __('Log In') }}</span>
+        <x-primary-button class="w-full">
+            <span class="text-lg text-center w-full">{{ __('Log In') }}</span>
         </x-primary-button>
     </div>
 </form>

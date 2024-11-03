@@ -6,7 +6,9 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
-Route::view('/', 'menu.welcome')->name('welcome');
+Route::middleware('guest')->group(function () {
+    Route::view('/', 'menu.welcome')->name('welcome');
+});
 
 Route::middleware('auth')->group(function () {
     
@@ -23,6 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('ticket')->name('ticket.')->group(function () {
         Route::get('/new', [TicketController::class, 'create'])->name('create');
         Route::post('/new', [TicketController::class, 'store'])->name('store');
+        Route::get('/{id}', [TicketController::class, 'show'])->name('show');
     });
 });
 

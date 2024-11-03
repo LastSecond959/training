@@ -21,17 +21,22 @@
         <x-input-label for="department">
             {{ __('Department') }}<span class="text-red-600">*</span>
         </x-input-label>
-        <select id="department" class="block mt-1 w-full rounded-md outline outline-1 outline-black" name="department" required>
-            <option value="" selected disabled>Select department</option>
-            <option value="IT" {{ old('department') === 'IT' ? 'selected' : '' }}>IT</option>
-            <option value="Finance" {{ old('department') === 'Finance' ? 'selected' : '' }}>Finance</option>
-            <option value="HR"  {{ old('department') === 'HR' ? 'selected' : '' }}>HR</option>
-            <option value="Accounting" {{ old('department') === 'Accounting' ? 'selected' : '' }}>Accounting</option>
-            <option value="Audit" {{ old('department') === 'Audit' ? 'selected' : '' }}>Audit</option>
-            <option value="Marketing" {{ old('department') === 'Marketing' ? 'selected' : '' }}>Marketing</option>
-            <option value="Tax" {{ old('department') === 'Tax' ? 'selected' : '' }} >Tax</option>
-            <option value="Others" {{ old('department') === 'Others' ? 'selected' : '' }}>Others</option>
-        </select>
+        <div class="btn-group dropend">
+            <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" style="width: 200px;">
+                {{ old('department') ? old('department') : 'Select department' }}
+            </button>
+            <ul class="dropdown-menu">
+                <li><button type="button" class="btn btn-secondary dropdown-item" onclick="changeText('IT')">IT</button></li>
+                <li><button type="button" class="btn btn-secondary dropdown-item" onclick="changeText('Finance')">Finance</button></li>
+                <li><button type="button" class="btn btn-secondary dropdown-item" onclick="changeText('HR')">HR</button></li>
+                <li><button type="button" class="btn btn-secondary dropdown-item" onclick="changeText('Accounting')">Accounting</button></li>
+                <li><button type="button" class="btn btn-secondary dropdown-item" onclick="changeText('Audit')">Audit</button></li>
+                <li><button type="button" class="btn btn-secondary dropdown-item" onclick="changeText('Marketing')">Marketing</button></li>
+                <li><button type="button" class="btn btn-secondary dropdown-item" onclick="changeText('Tax')">Tax</button></li>
+                <li><button type="button" class="btn btn-secondary dropdown-item" onclick="changeText('Others')">Others</button></li>
+            </ul>
+        </div>
+        <input type="hidden" id="department" name="department" value="{{ old('department') }}">
         <x-input-error :messages="$errors->get('department')" class="mt-2" />
     </div>
 
@@ -80,8 +85,15 @@
     </div>
 
     <div class="flex items-center justify-center mt-5">
-        <x-primary-button>
-            <span class="text-lg">{{ __('Register') }}</span>
+        <x-primary-button class="w-full">
+            <span class="text-lg text-center w-full">{{ __('Register') }}</span>
         </x-primary-button>
     </div>
+
+    <script>
+        function changeText(dept) {
+            document.querySelector('.dropdown-toggle').textContent = dept;
+            document.getElementById('department').value = dept;
+        }
+    </script>
 </form>

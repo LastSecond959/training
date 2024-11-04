@@ -33,19 +33,31 @@
             @forelse ($ticketList as $ticket)
                 <tr>
                     <th scope="row" class="py-2 px-3">
-                        <a href="{{ route('ticket.show', $ticket->id) }}">#TKT-{{ $ticket->id }}</a>
+                        <a href="{{ route('ticket.show', $ticket->id) }}">#{{ $ticket->id }}</a>
                     </th>
-                    <td class="py-2 px-3">{{ $ticket->title }}</td>
-                    <td class="py-2 px-3"><span class="badge bg-{{ strtolower(str_replace(' ', '-', $ticket->status)) }} fs-6">{{ $ticket->status }}</span></td>
-                    <td class="py-2 px-3"><span class="badge bg-{{ strtolower(str_replace(' ', '-', $ticket->priority)) }} fs-6">{{ $ticket->priority }}</span></td>
-                    <td class="py-2 px-3">{{ $ticket->handler_id ? $ticket->handler->name : 'Not assigned' }}</td>
+                    <td class="py-2 px-3 fw-semibold text-break">{{ $ticket->title }}</td>
                     <td class="py-2 px-3">
+                        <span class="badge bg-{{ strtolower(str_replace(' ', '-', $ticket->status)) }} fs-6">
+                            {{ $ticket->status }}
+                        </span>
+                    </td>
+                    <td class="py-2 px-3">
+                        <span class="badge bg-{{ strtolower(str_replace(' ', '-', $ticket->priority)) }} fs-6">
+                            {{ $ticket->priority }}
+                        </span>
+                    </td>
+                    <td class="py-2 px-3">
+                        <span class="text-red-600 fw-semibold">
+                            {{ $ticket->handler_id ? $ticket->handler->name : 'Unassigned' }}
+                        </span>
+                    </td>
+                    <td class="py-2 px-3 text-center">
                         {{ $ticket->created_at->format('d/m/Y') }}<br>{{ $ticket->created_at->format('H:i:s') }}
                     </td>
-                    <td class="py-2 px-3">
+                    <td class="py-2 px-3 text-center">
                         {!! $ticket->updated_at ? $ticket->updated_at->format('d/m/Y') . '<br>' . $ticket->updated_at->format('H:i:s') : '-' !!}
                     </td>
-                    <td class="py-2 px-3">
+                    <td class="py-2 px-3 text-center">
                         {!! $ticket->resolved_at ? $ticket->resolved_at->format('d/m/Y') . '<br>' . $ticket->resolved_at->format('H:i:s') : '-' !!}
                     </td>
                 </tr>

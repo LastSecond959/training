@@ -61,7 +61,7 @@ class TicketController extends Controller
     public function show($id)
     {
         // Show the ticket details
-        $ticket = Ticket::find($id);
+        $ticket = Ticket::findOrFail($id);
         if ($ticket->requester_id === Auth::id() || Auth::user()->role === 'admin') {
             return view('roleUser.showTicket', compact('ticket'));
         }
@@ -80,9 +80,25 @@ class TicketController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Ticket $ticket)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'title' => 'required|max:255',
+            'description' => 'required',
+            'priority' => 'required|in:low,urgent,emergency',
+        ]);
+        
+        $ticket = Ticket::findOrFail($id);
+        $ticket->update($request->only(['title', 'description', 'priority']));
+        
+        // if ($request->has('handler_id')) {
+        //     $ticket->handler_id = $request->input('handler_id');
+        // }
+        // if ($request->has('notes')) {
+        //     $ticket->notes = $request->input('notes');
+        // }
+
+        return redirect()->route('ticket.show', $ticket->id);
     }
 
     /**

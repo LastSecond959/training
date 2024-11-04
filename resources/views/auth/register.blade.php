@@ -22,7 +22,7 @@
             {{ __('Department') }}<span class="text-red-600">*</span>
         </x-input-label>
         <div class="btn-group dropend">
-            <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" style="width: 200px;">
+            <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" style="width: 200px;">
                 {{ old('department') ? old('department') : 'Select department' }}
             </button>
             <ul class="dropdown-menu">

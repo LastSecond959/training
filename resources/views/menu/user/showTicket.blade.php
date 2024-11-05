@@ -6,10 +6,10 @@
     <div class="container px-5 py-5">
         <div class="row d-flex justify-content-around">
             <div class="col-7">
-                <h4 class="pt-2 m-0">{{ $ticket->title }}</h4>
+                <h3 class="pt-2 m-0">{{ $ticket->title }}</h3>
                 <p><em>- {{ $ticket->requester->name }}, {{ $ticket->requester->department }}</em></p>
                 <hr style="border-bottom: 2px solid black;">
-                <p class="text-break pt-3">{{ $ticket->description }}</p>
+                <p class="text-break pt-3 fs-5">{{ $ticket->description }}</p>
             </div>
             <div class="col-4">
                 <div class="table-responsive">
@@ -73,7 +73,7 @@
                 <!-- Edit/Update Ticket -->
                 <div class="d-grid mt-3">
                     <button type="button" class="btn btn-dark fw-bold fs-5 py-2" data-bs-toggle="modal" data-bs-target="#editTicketModal{{ $ticket->id }}">
-                        {{ Auth::user()->role === 'admin' ? 'Update Ticket' : 'Edit Ticket' }}
+                        Edit Ticket
                     </button>
                 </div>
 
@@ -123,7 +123,7 @@
                                         }
                                     </script>
                                     
-                                    <div class="modal-footer mt-5">
+                                    <div class="modal-footer mt-5 pt-3 pb-0">
                                         <div class="d-grid gap-3 w-full">
                                             <button type="submit" class="btn btn-success py-2 fw-semibold fs-5">Save Changes</button>
                                             <button type="button" class="btn btn-secondary py-2 fw-semibold fs-5" data-bs-dismiss="modal">Cancel</button>

@@ -11,15 +11,31 @@ class TicketController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        if (Auth::check()) {
-            $ticketList = Auth::user()->role === 'admin' ? Ticket::all() : Ticket::where('requester_id', Auth::id())->get();
-            
-            return view('layouts.dashboard', compact('ticketList'));
+        if (!Auth::check() || Auth::guest()) {
+            return view('menu.welcome');
         }
         
-        return view('menu.welcome');
+        $search = $request->input('search');
+
+        $sort = Ticket::when($search, function($query, $search) {
+            $query->where(function($query) use ($search) {
+                $query->where('title', 'LIKE', "%{$search}%")
+                    ->orWhere('id', $search);
+            });
+        })->orderByRaw("
+                    FIELD(status, 'Open', 'In Progress', 'On Hold', 'Closed'),
+                    FIELD(priority, 'Emergency', 'Urgent', 'Low')
+        ");
+
+        if (Auth::user()->role === 'user') {
+            $ticketList = $sort->where('requester_id', Auth::id())->get();
+        } elseif (Auth::user()->role === 'admin') {
+            $ticketList = $sort->get();
+        }
+
+        return view('layouts.dashboard', compact('ticketList'));
     }
 
     /**
@@ -27,7 +43,7 @@ class TicketController extends Controller
      */
     public function create()
     {
-        return view('roleUser.createTicket');
+        return view('menu.createTicket');
     }
 
     /**
@@ -62,8 +78,10 @@ class TicketController extends Controller
     {
         // Show the ticket details
         $ticket = Ticket::findOrFail($id);
-        if ($ticket->requester_id === Auth::id() || Auth::user()->role === 'admin') {
-            return view('roleUser.showTicket', compact('ticket'));
+        if ($ticket->requester_id === Auth::id()) {
+            return view('menu.user.showTicket', compact('ticket'));
+        } elseif (Auth::user()->role === 'admin') {
+            return view('menu.admin.showTicket', compact('ticket'));
         }
 
         return redirect()->route('dashboard');
@@ -98,6 +116,17 @@ class TicketController extends Controller
         //     $ticket->notes = $request->input('notes');
         // }
 
+        return redirect()->route('ticket.show', $ticket->id);
+    }
+
+    public function handle(Request $request, $id)
+    {
+        $ticket = Ticket::findOrFail($id);
+        $ticket->handler_id = Auth::id();
+        $ticket->status = 'In Progress';
+        
+        $ticket->save();
+        
         return redirect()->route('ticket.show', $ticket->id);
     }
 

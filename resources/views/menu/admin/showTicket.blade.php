@@ -72,15 +72,9 @@
 
                 <!-- Edit/Update Ticket -->
                 <div class="d-grid mt-3">
-                    @if ($ticket->status == 'Open')
-                        <a href=role="button" class="btn btn-primary fw-bold fs-5 py-2">
-                            Handle Ticket
-                        </a>
-                    @else
                         <button type="button" class="btn btn-dark fw-bold fs-5 py-2" data-bs-toggle="modal" data-bs-target="#editTicketModal{{ $ticket->id }}">
                             Update Ticket
                         </button>
-                    @endif
                 </div>
 
                 <div class="modal fade" id="editTicketModal{{ $ticket->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">

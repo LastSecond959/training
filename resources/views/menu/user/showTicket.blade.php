@@ -123,12 +123,10 @@
                                         }
                                     </script>
                                     
-                                    <div class="modal-footer mt-5 pt-3 pb-0">
                                         <div class="d-grid gap-3 w-full">
                                             <button type="submit" class="btn btn-success py-2 fw-semibold fs-5">Save Changes</button>
                                             <button type="button" class="btn btn-secondary py-2 fw-semibold fs-5" data-bs-dismiss="modal">Cancel</button>
                                         </div>
-                                    </div>
                                 </form>
                             </div>
                         </div>

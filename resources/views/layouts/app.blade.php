@@ -51,6 +51,37 @@
                 color: white;
                 padding: 10px 12px;
             }
+
+            /* Button Active State: Green background with white text */
+            .pagination .page-item.active .page-link {
+                background-color: #28a745; /* Green */
+                border-color: #28a745;
+                color: white; /* White text */
+            }
+
+            /* Remove focus ring */
+            .pagination .page-item.active .page-link:focus {
+                outline: none;
+                box-shadow: none;
+            }
+
+            /* Hover Effect: Darker Green on hover */
+            .pagination .page-item:hover .page-link {
+                background-color: #218838; /* Darker green */
+                color: white;
+            }
+
+            /* Default link color (green) */
+            .pagination .page-item .page-link {
+                color: #28a745;
+            }
+
+            /* Disabled state */
+            .pagination .page-item.disabled .page-link {
+                color: #6c757d;
+                background-color: transparent;
+                border-color: #6c757d;
+            }
         </style>
     </head>
     <body class="font-sans antialiased">

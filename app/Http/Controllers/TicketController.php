@@ -30,11 +30,11 @@ class TicketController extends Controller
         ");
 
         if (Auth::user()->role === 'user') {
-            $ticketList = $sort->where('requester_id', Auth::id())->get();
+            $ticketList = $sort->where('requester_id', Auth::id())->paginate(10)->withQueryString();
         } elseif (Auth::user()->role === 'admin') {
-            $ticketList = $sort->get();
+            $ticketList = $sort->paginate(10)->withQueryString();
         }
-
+        
         return view('layouts.dashboard', compact('ticketList'));
     }
 

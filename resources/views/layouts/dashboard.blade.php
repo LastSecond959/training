@@ -4,33 +4,19 @@
 
 @section('content')
 <div class="container px-5 py-4">
-    <div class="d-flex justify-content-between pb-3">
+    <div class="d-flex justify-content-between pb-2">
         <h4 class="d-flex align-items-center m-0">{{ Auth::user()->role === 'admin' ? 'List of Tickets' : 'My Tickets' }}</h4>
-        
-        <!-- Pagination -->
-         
         
         <!-- Search bar -->
         <form method="GET" action="{{ route('dashboard') }}" class="d-flex">
             <input class="rounded me-2 border-dark" type="search" name="search" placeholder="Search by title or id" value="{{ request()->input('search') }}" id="searchInput" required>
             <button class="btn btn-success fw-semibold" type="submit" id="searchButton" disabled>Search</button>
-
-            <script>
-                const searchInput = document.getElementById('searchInput');
-                const searchButton = document.getElementById('searchButton');
-
-                function toggleButtonState() {
-                    searchButton.disabled = !searchInput.value.trim();
-                }
-                searchInput.addEventListener('input', toggleButtonState);
-                document.addEventListener('DOMContentLoaded', toggleButtonState);
-            </script>
         </form>
     </div>
 
     <!-- Ticket list -->
-    <div class="table-responsive" style="height: 750px; overflow-y: auto;">
-        <table class="table table-hover table-bordered align-middle">
+    <div class="table-responsive" style="height: 710px; overflow-y: auto;">
+        <table class="table table-hover table-bordered align-middle mb-0">
             <thead class="table-dark">
                 <tr>
                     <th scope="col" class="py-3 px-3" style="width: 10%;">Ticket ID</th>
@@ -84,5 +70,19 @@
             </tbody>
         </table>
     </div>
+
+    <!-- Pagination -->
+        {{ $ticketList->links('vendor.pagination.bootstrap-5') }}
 </div>
+
+<script>
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+
+    function toggleButtonState() {
+        searchButton.disabled = !searchInput.value.trim();
+    }
+    searchInput.addEventListener('input', toggleButtonState);
+    document.addEventListener('DOMContentLoaded', toggleButtonState);
+</script>
 @endsection

@@ -36,14 +36,16 @@
                     <th scope="row" class="py-2 px-3">
                         <a href="{{ route('ticket.show', $ticket->id) }}">#{{ $ticket->id }}</a>
                     </th>
-                    <td class="py-2 px-3 fw-semibold text-break">{{ $ticket->title }}</td>
+                    <td class="py-2 px-3 fw-semibold text-break">
+                        <a href="{{ route('ticket.show', $ticket->id) }}" style="text-decoration: none; color: inherit;">{{ $ticket->title }}</a>
+                    </td>
                     <td class="py-2 px-3">
                         <span class="badge bg-{{ strtolower(str_replace(' ', '-', $ticket->status)) }} fs-6">
                             {{ $ticket->status }}
                         </span>
                     </td>
                     <td class="py-2 px-3">
-                        <span class="badge bg-{{ strtolower(str_replace(' ', '-', $ticket->priority)) }} fs-6">
+                        <span class="badge bg-{{ lcfirst($ticket->priority) }} fs-6">
                             {{ $ticket->priority }}
                         </span>
                     </td>

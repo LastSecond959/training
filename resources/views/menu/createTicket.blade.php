@@ -51,7 +51,7 @@
         <script>
             function changePriority(priority) {
                 document.getElementById('priorityDropdown').querySelector('span').textContent = priority;
-                document.getElementById('priority').value = priority.toLowerCase();
+                document.getElementById('priority').value = priority;
                 document.getElementById('priorityDropdown').classList.remove('btn-secondary', 'bg-low', 'bg-urgent', 'bg-emergency');
                 document.getElementById('priorityDropdown').classList.add('bg-' + priority.toLowerCase());
             }

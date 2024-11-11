@@ -16,24 +16,30 @@
 
         <!-- Styles -->
         <style>
-            .bg-in-progress {
-                background-color: blue;
-                color: white;
-                padding: 10px 12px;
-            }
-            .bg-closed {
-                background-color: black;
-                color: white;
-                padding: 10px 12px;
-            }
             .bg-open {
                 background-color: green;
                 color: white;
                 padding: 10px 12px;
             }
-            .bg-on-hold {
+            .bg-in-progress, .btn.bg-in-progress:hover, .btn.bg-in-progress:active, .btn.bg-in-progress:focus {
+                background-color: blue;
+                color: white;
+                padding: 10px 12px;
+            }
+            .bg-on-hold, .btn.bg-on-hold:hover, .btn.bg-on-hold:active, .btn.bg-on-hold:focus {
                 background-color: yellow;
                 color: black;
+                padding: 10px 12px;
+            }
+            .bg-closed, .btn.bg-closed:hover, .btn.bg-closed:active, .btn.bg-closed:focus {
+                background-color: black;
+                color: white;
+                padding: 10px 12px;
+            }
+            
+            .bg-low, .btn.bg-low:hover, .btn.bg-low:active, .btn.bg-low:focus {
+                background-color: #20c997;
+                color: white;
                 padding: 10px 12px;
             }
             .bg-urgent, .btn.bg-urgent:hover, .btn.bg-urgent:active, .btn.bg-urgent:focus {
@@ -43,11 +49,6 @@
             }
             .bg-emergency, .btn.bg-emergency:hover, .btn.bg-emergency:active, .btn.bg-emergency:focus {
                 background-color: #e5192e;
-                color: white;
-                padding: 10px 12px;
-            }
-            .bg-low, .btn.bg-low:hover, .btn.bg-low:active, .btn.bg-low:focus {
-                background-color: #20c997;
                 color: white;
                 padding: 10px 12px;
             }

@@ -25,7 +25,7 @@ class TicketController extends Controller
                     ->orWhere('id', $search);
             });
         })->orderByRaw("
-                    FIELD(status, 'Open', 'In Progress', 'On Hold', 'Closed'),
+                    FIELD(status, 'Open', 'On Hold', 'In Progress', 'Closed'),
                     FIELD(priority, 'Emergency', 'Urgent', 'Low')
         ");
 
@@ -55,7 +55,7 @@ class TicketController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|max:255',
             'description' => 'required',
-            'priority' => 'required|in:low,urgent,emergency',
+            'priority' => 'required|in:Low,Urgent,Emergency',
         ]);
         
         // Create a new ticket
@@ -63,7 +63,7 @@ class TicketController extends Controller
             'title' => $validatedData['title'],
             'description' => $validatedData['description'],
             'requester_id' => Auth::id(),
-            'status' => 'open',
+            'status' => 'Open',
             'priority' => $validatedData['priority'],
             'updated_at' => null,
         ]);
@@ -100,26 +100,37 @@ class TicketController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'title' => 'required|max:255',
-            'description' => 'required',
-            'priority' => 'required|in:low,urgent,emergency',
-        ]);
-        
-        $ticket = Ticket::findOrFail($id);
-        $ticket->update($request->only(['title', 'description', 'priority']));
-        
-        // if ($request->has('handler_id')) {
-        //     $ticket->handler_id = $request->input('handler_id');
-        // }
-        // if ($request->has('notes')) {
-        //     $ticket->notes = $request->input('notes');
-        // }
+        if (!Auth::check() || Auth::guest()) {
+            return view('menu.welcome');
+        }
+
+        if (Auth::user()->role === 'admin') {
+
+            $request->validate([
+                'status' => 'required|in:In-Progress,On-Hold,Closed',
+                'notes' => 'nullable',
+            ]);
+            
+            $ticket = Ticket::findOrFail($id);
+            $ticket->update($request->only(['status', 'notes']));
+
+        } elseif (Auth::user()->role === 'user') {
+
+            $request->validate([
+                'title' => 'required|max:255',
+                'description' => 'required',
+                'priority' => 'required|in:Low,Urgent,Emergency',
+            ]);
+            
+            $ticket = Ticket::findOrFail($id);
+            $ticket->update($request->only(['title', 'description', 'priority']));
+
+        }
 
         return redirect()->route('ticket.show', $ticket->id);
     }
 
-    public function handle(Request $request, $id)
+    public function handle($id)
     {
         $ticket = Ticket::findOrFail($id);
         $ticket->handler_id = Auth::id();

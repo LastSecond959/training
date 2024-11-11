@@ -33,7 +33,7 @@
                             <tr>
                                 <th scope="row" style="width: 35%;">Priority</th>
                                 <td class="fs-5">
-                                    <span class="badge bg-{{ strtolower(str_replace(' ', '-', $ticket->priority)) }}">{{ $ticket->priority }}</span>
+                                    <span class="badge bg-{{ lcfirst($ticket->priority) }}">{{ $ticket->priority }}</span>
                                 </td>
                             </tr>
                             <tr>
@@ -71,69 +71,91 @@
                 </div>
 
                 <!-- Edit/Update Ticket -->
-                <div class="d-grid mt-3">
-                        <button type="button" class="btn btn-dark fw-bold fs-5 py-2" data-bs-toggle="modal" data-bs-target="#editTicketModal{{ $ticket->id }}">
-                            Update Ticket{{ $ticket->handler_id ? $ticket->handler->name : 'Unassigned' }}
-                        </button>
-                </div>
+                @if ($ticket->status != 'Closed')
+                    <div class="d-grid mt-3">
+                        @if (Auth::id() == $ticket->handler_id)
+                            <button type="button" class="btn btn-dark fw-bold fs-5 py-2" data-bs-toggle="modal" data-bs-target="#updateTicketModal{{ $ticket->id }}">
+                                Update Ticket
+                            </button>
+                        @elseif (!$ticket->handler_id)
+                        <form method="POST" action="{{ route('ticket.handle', $ticket->id) }}">
+                            @csrf
+                            @method('PATCH')
 
-                <div class="modal fade" id="editTicketModal{{ $ticket->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-body">
-                                <form method="POST" action="{{ route('ticket.update', $ticket->id) }}">
-                                    @csrf
-                                    @method('PUT')
+                            <button type="submit" class="btn btn-dark fw-bold fs-5 py-2">
+                                Handle Ticket
+                            </button>
+                        </form>
+                        @endif
+                    </div>
 
-                                    <div class="mb-3">
-                                        <label for="title{{ $ticket->id }}" class="block text-black font-bold">
-                                            Title<span class="text-red-600">*</span>
+                    <div class="modal fade" id="updateTicketModal{{ $ticket->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-body" style="padding-bottom: 12px;">
+                                    <form method="POST" action="{{ route('ticket.update', $ticket->id) }}">
+                                        @csrf
+                                        @method('PUT')
+
+                                        <label for="status{{ $ticket->id }}" class="block text-black font-bold">
+                                            Status<span class="text-red-600">*</span>
                                         </label>
-                                        <input type="text" name="title" id="title{{ $ticket->id }}" class="rounded mt-1 w-full" value="{{ $ticket->title }}" required>
-                                    </div>
+                                        <div class="btn-group dropend mb-5">
+                                            <button id="statusDropdown{{ $ticket->id }}" type="button" class="btn bg-{{ strtolower(str_replace(' ', '-', $ticket->status)) }} dropdown-toggle" data-bs-toggle="dropdown" style="width: 150px; padding: 10px 12px">
+                                                <span class="text-white font-bold">{{ $ticket->status }}</span>
+                                            </button>
+                                            <ul class="dropdown-menu" style="padding: 2px 0px">
+                                                <li><button type="button" class="dropdown-item py-2" onclick="changeStatus('In Progress')">In Progress</button></li>
+                                                <li><button type="button" class="dropdown-item py-2" onclick="changeStatus('On Hold')">On Hold</button></li>
+                                                <li><button type="button" class="dropdown-item py-2" onclick="changeStatus('Closed')">Closed</button></li>
+                                            </ul>
+                                        </div>
+                                        <input type="hidden" id="status{{ $ticket->id }}" name="status" value="{{ old('status', $ticket->status) }}" required>
+                                        
+                                        <div class="mb-3">
+                                            <label for="notes{{ $ticket->id }}" class="block text-black font-bold">
+                                                Notes<span class="text-red-600">*</span>
+                                            </label>
+                                            <textarea name="notes" id="notes{{ $ticket->id }}" class="rounded mt-1 w-full" style="height: 250px;">{{ $ticket->notes }}</textarea>
+                                        </div>
 
-                                    <div class="mb-3">
-                                        <label for="description{{ $ticket->id }}" class="block text-black font-bold">
-                                            Description<span class="text-red-600">*</span>
-                                        </label>
-                                        <textarea name="description" id="description{{ $ticket->id }}" class="rounded mt-1 w-full" style="height: 250px;" required>{{ $ticket->description }}</textarea>
-                                    </div>
-
-                                    <label for="priority{{ $ticket->id }}" class="block text-black font-bold">
-                                        Priority<span class="text-red-600">*</span>
-                                    </label>
-                                    <div class="btn-group dropend mb-5">
-                                        <button id="priorityDropdown{{ $ticket->id }}" type="button" class="btn bg-{{ lcfirst($ticket->priority) }} dropdown-toggle" data-bs-toggle="dropdown" style="width: 150px; padding: 10px 12px">
-                                            <span class="text-white font-bold">{{ $ticket->priority }}</span>
-                                        </button>
-                                        <ul class="dropdown-menu" style="padding: 2px 0px">
-                                            <li><button type="button" class="dropdown-item py-2" onclick="changePriority('Low')">Low</button></li>
-                                            <li><button type="button" class="dropdown-item py-2" onclick="changePriority('Urgent')">Urgent</button></li>
-                                            <li><button type="button" class="dropdown-item py-2" onclick="changePriority('Emergency')">Emergency</button></li>
-                                        </ul>
-                                    </div>
-                                    <input type="hidden" id="priority{{ $ticket->id }}" name="priority" value="{{ old('priority', $ticket->priority) }}" required>
-                                    
-                                    <script>
-                                        function changePriority(priority) {
-                                            document.getElementById('priorityDropdown{{ $ticket->id }}').querySelector('span').textContent = priority;
-                                            document.getElementById('priority{{ $ticket->id }}').value = priority.toLowerCase();
-                                            document.getElementById('priorityDropdown{{ $ticket->id }}').classList.remove('btn-secondary', 'bg-low', 'bg-urgent', 'bg-emergency');
-                                            document.getElementById('priorityDropdown{{ $ticket->id }}').classList.add('bg-' + priority.toLowerCase());
-                                        }
-                                    </script>
-                                    
-                                    <div class="modal-footer mt-5 pt-3 pb-0">
-                                        <div class="d-grid gap-3 w-full">
+                                        <hr class="mt-5">
+                                        
+                                        <div class="d-grid gap-2 w-full">
                                             <button type="submit" class="btn btn-success py-2 fw-semibold fs-5">Save Changes</button>
                                             <button type="button" class="btn btn-secondary py-2 fw-semibold fs-5" data-bs-dismiss="modal">Cancel</button>
                                         </div>
-                                    </div>
-                                </form>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                    <script>
+                        // function handleTicket(ticketId) {
+                        //     fetch(`/ticket/${ticketId}`, {
+                        //         method: 'PATCH',
+                        //         headers: {
+                        //             'Content-Type': 'application/json',
+                        //             'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        //         },
+                        //         body: JSON.stringify({
+                        //             handler_id: {{ Auth::id() }},
+                        //             status: 'In Progress'
+                        //         })
+                        //     })
+                        //     .then(response => response.ok ? location.reload() : alert('Error updating ticket'));
+                        // }
+
+                        function changeStatus(status) {
+                            document.getElementById('statusDropdown{{ $ticket->id }}').querySelector('span').textContent = status;
+                            document.getElementById('status{{ $ticket->id }}').value = status.replace(/ /g, '-');
+                            document.getElementById('statusDropdown{{ $ticket->id }}').classList.remove('bg-open', 'bg-in-progress', 'bg-on-hold', 'bg-closed');
+                            document.getElementById('statusDropdown{{ $ticket->id }}').classList.add('bg-' + status.toLowerCase().replace(/ /g, '-'));
+
+                            document.getElementById('handlerDropdown{{ $ticket->id }}').disabled = (status !== 'On Hold');
+                        }
+                    </script>
+                @endif
             </div>
         </div>
     </div>

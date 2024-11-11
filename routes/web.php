@@ -27,7 +27,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/new', [TicketController::class, 'store'])->name('store');
         Route::get('/{id}', [TicketController::class, 'show'])->name('show');
         Route::put('/{id}', [TicketController::class, 'update'])->name('update');
-        
+        Route::patch('/{id}', [TicketController::class, 'handle'])->name('handle');
     });
 });
 

@@ -73,7 +73,7 @@
                 <!-- Edit/Update Ticket -->
                 <div class="d-grid mt-3">
                         <button type="button" class="btn btn-dark fw-bold fs-5 py-2" data-bs-toggle="modal" data-bs-target="#editTicketModal{{ $ticket->id }}">
-                            Update Ticket
+                            Update Ticket{{ $ticket->handler_id ? $ticket->handler->name : 'Unassigned' }}
                         </button>
                 </div>
 

@@ -72,7 +72,7 @@
     </div>
 
     <!-- Pagination -->
-        {{ $ticketList->links('vendor.pagination.bootstrap-5') }}
+    {{ $ticketList->links('vendor.pagination.bootstrap-5') }}
 </div>
 
 <script>

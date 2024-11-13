@@ -50,9 +50,11 @@
                         </span>
                     </td>
                     <td class="py-2 px-3">
-                        <span class="text-red-600 fw-semibold">
-                            {{ $ticket->handler_id ? $ticket->handler->name : 'Unassigned' }}
-                        </span>
+                        @if ($ticket->handler_id)
+                            {{ $ticket->handler->name }}
+                        @else
+                            <span class="text-red-600 fw-semibold">Unassigned</span>
+                        @endif
                     </td>
                     <td class="py-2 px-3 text-center">
                         {{ $ticket->created_at->format('d/m/Y') }}<br>{{ $ticket->created_at->format('H:i:s') }}

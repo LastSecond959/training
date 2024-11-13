@@ -39,9 +39,11 @@
                             <tr>
                                 <th scope="row" style="width: 35%;">Assigned To</th>
                                 <td>
-                                    <span class="text-red-600 fw-semibold">
-                                        {{ $ticket->handler_id ? $ticket->handler->name : 'Unassigned' }}
-                                    </span>
+                                    @if ($ticket->handler_id)
+                                        {{ $ticket->handler->name }}
+                                    @else
+                                        <span class="text-red-600 fw-semibold">Unassigned</span>
+                                    @endif
                                 </td>
                             </tr>
                             <tr>

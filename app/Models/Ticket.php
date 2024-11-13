@@ -11,6 +11,10 @@ class Ticket extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'resolved_at' => 'datetime',
+    ];
+
     // Relationship to the user who created the ticket
     public function requester()
     {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\Ticket;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class TicketController extends Controller
@@ -25,9 +26,14 @@ class TicketController extends Controller
                     ->orWhere('id', $search);
             });
         })->orderByRaw("
-                    FIELD(status, 'Open', 'On Hold', 'In Progress', 'Closed'),
-                    FIELD(priority, 'Emergency', 'Urgent', 'Low')
-        ");
+            CASE 
+                WHEN handler_id = ? THEN 1
+                WHEN status = 'Open' THEN 2
+                ELSE 3
+            END,
+            FIELD(status, 'Open', 'On Hold', 'In Progress', 'Closed'),
+            FIELD(priority, 'Emergency', 'Urgent', 'Low')
+        ", [Auth::id()]);
 
         if (Auth::user()->role === 'user') {
             $ticketList = $sort->where('requester_id', Auth::id())->paginate(10)->withQueryString();
@@ -78,10 +84,12 @@ class TicketController extends Controller
     {
         // Show the ticket details
         $ticket = Ticket::findOrFail($id);
+        $adminList = User::where('role', 'admin')->get();
+
         if ($ticket->requester_id === Auth::id()) {
             return view('menu.user.showTicket', compact('ticket'));
         } elseif (Auth::user()->role === 'admin') {
-            return view('menu.admin.showTicket', compact('ticket'));
+            return view('menu.admin.showTicket', compact('ticket', 'adminList'));
         }
 
         return redirect()->route('dashboard');
@@ -107,12 +115,19 @@ class TicketController extends Controller
         if (Auth::user()->role === 'admin') {
 
             $request->validate([
-                'status' => 'required|in:In-Progress,On-Hold,Closed',
+                'status' => 'required|in:In Progress,On Hold,Closed',
+                'handler_id' => 'required|exists:users,id',
                 'notes' => 'nullable',
             ]);
-            
+
             $ticket = Ticket::findOrFail($id);
-            $ticket->update($request->only(['status', 'notes']));
+            $ticket->update($request->only(['status', 'handler_id', 'notes']));
+
+            if ($ticket->status === 'Closed') {
+                $ticket->resolved_at = now();
+            }
+            
+            $ticket->save();
 
         } elseif (Auth::user()->role === 'user') {
 

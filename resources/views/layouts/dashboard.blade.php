@@ -15,7 +15,7 @@
     </div>
 
     <!-- Ticket list -->
-    <div class="table-responsive" style="height: 710px; overflow-y: auto;">
+    <div class="table-responsive rounded-2 overflow-auto" style="height: 710px;">
         <table class="table table-hover table-bordered align-middle mb-0">
             <thead class="table-dark">
                 <tr>

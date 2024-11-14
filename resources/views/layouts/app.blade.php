@@ -16,6 +16,7 @@
 
         <!-- Styles -->
         <style>
+            /* Buttons */
             .bg-open {
                 background-color: green;
                 color: white;
@@ -53,35 +54,18 @@
                 padding: 10px 12px;
             }
 
-            /* Button Active State: Green background with white text */
-            .pagination .page-item.active .page-link {
-                background-color: #28a745; /* Green */
-                border-color: #28a745;
-                color: white; /* White text */
-            }
-
-            /* Remove focus ring */
-            .pagination .page-item.active .page-link:focus {
-                outline: none;
-                box-shadow: none;
-            }
-
-            /* Hover Effect: Darker Green on hover */
-            .pagination .page-item:hover .page-link {
-                background-color: #218838; /* Darker green */
-                color: white;
-            }
-
-            /* Default link color (green) */
-            .pagination .page-item .page-link {
-                color: #28a745;
-            }
-
-            /* Disabled state */
-            .pagination .page-item.disabled .page-link {
-                color: #6c757d;
-                background-color: transparent;
-                border-color: #6c757d;
+            /* Pagination */
+            .pagination {
+                --bs-pagination-color: #198754;
+                --bs-pagination-border-color: #dee2e6;
+                --bs-pagination-hover-color: #157347;
+                --bs-pagination-hover-bg: #e2e3e5;
+                --bs-pagination-hover-border-color: #6c757d;
+                --bs-pagination-focus-color: #157347;
+                --bs-pagination-focus-bg: #dee2e6;
+                --bs-pagination-focus-box-shadow: 0 0 0 .05rem #6c757d;
+                --bs-pagination-active-bg: #146c43;
+                --bs-pagination-active-border-color: #13653f;
             }
         </style>
     </head>

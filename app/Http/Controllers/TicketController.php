@@ -27,8 +27,8 @@ class TicketController extends Controller
             });
         })->orderByRaw("
             CASE 
-                WHEN handler_id = ? THEN 1
-                WHEN status = 'Open' THEN 2
+                WHEN status = 'Open' THEN 1
+                WHEN handler_id = ? THEN 2
                 ELSE 3
             END,
             FIELD(status, 'Open', 'On Hold', 'In Progress', 'Closed'),

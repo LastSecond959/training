@@ -12,7 +12,7 @@
                 <p class="text-break pt-3 fs-5">{{ $ticket->description }}</p>
             </div>
             <div class="col-4">
-                <div class="table-responsive">
+                <div class="table-responsive rounded-2">
                     <table class="table table-bordered border-dark align-middle">
                         <thead class="table-dark">
                             <tr>
@@ -98,7 +98,7 @@
                                     <form method="POST" action="{{ route('ticket.update', $ticket->id) }}">
                                         @csrf
                                         @method('PUT')
-<!-- Collapse -->
+
                                         <div class="d-flex justify-content-between"> 
                                             <div class="col-6">
                                                 <label for="status{{ $ticket->id }}" class="block text-black font-bold">

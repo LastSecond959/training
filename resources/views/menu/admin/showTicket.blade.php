@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Ticket Details')
+@section('title', "[#{$ticket->id}] {$ticket->title}")
 
 @section('content')
     <div class="container px-5 py-5">
@@ -11,6 +11,7 @@
                 <hr style="border-bottom: 2px solid black;">
                 <p class="text-break pt-3 fs-5">{{ $ticket->description }}</p>
             </div>
+            <div class="col-1"></div>
             <div class="col-4">
                 <div class="table-responsive rounded-2">
                     <table class="table table-bordered border-dark align-middle">
@@ -106,7 +107,7 @@
                                                 </label>
                                                 <div class="btn-group dropend" style="margin-bottom: 60px;">
                                                     <button id="statusDropdown{{ $ticket->id }}" type="button" class="btn bg-{{ strtolower(str_replace(' ', '-', $ticket->status)) }} dropdown-toggle" data-bs-toggle="dropdown" style="width: 150px; padding: 10px 12px">
-                                                        <span class="text-white font-bold">{{ $ticket->status }}</span>
+                                                        <span id="statusBtnColor{{ $ticket->id }}" class="{{ $ticket->status == 'On Hold' ? 'text-black' : 'text-white' }} font-bold">{{ $ticket->status }}</span>
                                                     </button>
                                                     <ul class="dropdown-menu" style="padding: 2px 0px">
                                                         <li><button type="button" class="dropdown-item py-2" onclick="changeStatus('In Progress')">In Progress</button></li>
@@ -140,7 +141,7 @@
 
                                         <hr>
                                         
-                                        <div class="d-grid gap-2 w-full">
+                                        <div class="vstack gap-2 w-full">
                                             <button type="submit" class="btn btn-success py-2 fw-semibold fs-5">Save Changes</button>
                                             <button type="button" class="btn btn-secondary py-2 fw-semibold fs-5" data-bs-dismiss="modal">Cancel</button>
                                         </div>
@@ -170,6 +171,8 @@
                             document.getElementById('status{{ $ticket->id }}').value = status;
                             document.getElementById('statusDropdown{{ $ticket->id }}').classList.remove('bg-open', 'bg-in-progress', 'bg-on-hold', 'bg-closed');
                             document.getElementById('statusDropdown{{ $ticket->id }}').classList.add('bg-' + status.toLowerCase().replace(/ /g, '-'));
+                            document.getElementById('statusBtnColor{{ $ticket->id }}').classList.remove('text-black', 'text-white');
+                            document.getElementById('statusBtnColor{{ $ticket->id }}').classList.add('text-' + (status !== 'On Hold' ? 'white' : 'black'));
 
                             document.getElementById('selectAdmin{{ $ticket->id }}').style.display = (status !== 'On Hold') ? 'none' : 'block';
                         }

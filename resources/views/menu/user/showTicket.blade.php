@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Ticket Details')
+@section('title', "[#{$ticket->id}] {$ticket->title}")
 
 @section('content')
     <div class="container px-5 py-5">
@@ -11,6 +11,7 @@
                 <hr style="border-bottom: 2px solid black;">
                 <p class="text-break pt-3 fs-5">{{ $ticket->description }}</p>
             </div>
+            <div class="col-1"></div>
             <div class="col-4">
                 <div class="table-responsive">
                     <table class="table table-bordered border-dark align-middle">

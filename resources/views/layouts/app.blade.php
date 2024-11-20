@@ -54,6 +54,13 @@
                 padding: 10px 12px;
             }
 
+            .sortTable {
+                text-decoration: none;
+            }
+            .sortTable:hover {
+                text-decoration: underline;
+            }
+            
             /* Pagination */
             .pagination {
                 --bs-pagination-color: #198754;

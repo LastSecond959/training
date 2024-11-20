@@ -13,7 +13,7 @@
             </div>
             <div class="col-1"></div>
             <div class="col-4">
-                <div class="table-responsive">
+                <div class="table-responsive rounded-2">
                     <table class="table table-bordered border-dark align-middle">
                         <thead class="table-dark">
                             <tr>
@@ -129,9 +129,9 @@
                                         
                                         <hr class="mt-5">
 
-                                        <div class="d-grid gap-2 w-full">
-                                            <button type="submit" class="btn btn-success fw-semibold fs-5" style="padding: 10px 12px">Save Changes</button>
-                                            <button type="button" class="btn btn-secondary fw-semibold fs-5" style="padding: 10px 12px" data-bs-dismiss="modal">Cancel</button>
+                                        <div class="vstack gap-2 w-full">
+                                            <button type="submit" class="btn btn-success py-2 fw-semibold fs-5">Save Changes</button>
+                                            <button type="button" class="btn btn-secondary py-2 fw-semibold fs-5" data-bs-dismiss="modal">Cancel</button>
                                         </div>
                                     </form>
                                 </div>

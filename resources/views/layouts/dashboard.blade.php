@@ -5,60 +5,16 @@
 @section('content')
 <div class="container px-5 pt-4">
     <div class="d-flex justify-content-between align-items-center pb-2">
-        <div>
-            <h4 class="m-0">{{ Auth::user()->role === 'admin' ? 'List of Tickets' : 'My Tickets' }}</h4>
-            <div class="d-grid gap-2 d-md-flex">
-                <span class="p-0 text-dark fw-bold align-self-end" style="font-size: 16px;">Filter:</span>
-                <div class="dropdown-center ms-1">
-                    <button class="btn dropdown-toggle p-0 text-dark fw-bold border-0 bg-transparent sortTable" type="button" data-bs-toggle="dropdown">
-                        <span style="font-size: 16px;">Ticket ID [Default]</span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item active" href="#">Default</a></li>
-                        <li><a class="dropdown-item" href="#">Ascending</a></li>
-                        <li><a class="dropdown-item" href="#">Descending</a></li>
-                    </ul>
-                </div>
-                <div class="dropdown-center ms-2">
-                    <button class="btn dropdown-toggle p-0 text-dark fw-bold border-0 bg-transparent sortTable" type="button" data-bs-toggle="dropdown">
-                        <span style="font-size: 16px;">Status [Default]</span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item active" href="#">Default</a></li>
-                        <li><a class="dropdown-item" href="#">Open</a></li>
-                        <li><a class="dropdown-item" href="#">On Hold</a></li>
-                        <li><a class="dropdown-item" href="#">In Progress</a></li>
-                        <li><a class="dropdown-item" href="#">Closed</a></li>
-                    </ul>
-                </div>
-                <div class="dropdown-center ms-2">
-                    <button class="btn dropdown-toggle p-0 text-dark fw-bold border-0 bg-transparent sortTable" type="button" data-bs-toggle="dropdown">
-                        <span style="font-size: 16px;">Priority [Default]</span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item active" href="#">Default</a></li>
-                        <li><a class="dropdown-item" href="#">Emergency</a></li>
-                        <li><a class="dropdown-item" href="#">Urgent</a></li>
-                        <li><a class="dropdown-item" href="#">Low</a></li>
-                    </ul>
-                </div>
-                <div class="dropdown-center ms-2">
-                    <button class="btn dropdown-toggle p-0 text-dark fw-bold border-0 bg-transparent sortTable" type="button" data-bs-toggle="dropdown">
-                        <span style="font-size: 16px;">Assigned To [Default]</span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item active" href="#">Default</a></li>
-                        <li><a class="dropdown-item" href="#">Unassigned</a></li>
-                        <li><a class="dropdown-item" href="#">Me</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+        <h4 class="m-0">{{ Auth::user()->role === 'admin' ? 'List of Tickets' : 'My Tickets' }}</h4>
         
         <!-- Search bar -->
         <form method="GET" action="{{ route('dashboard') }}" class="d-flex align-self-end">
-            <input class="rounded me-2 border-dark" type="search" name="search" placeholder="Search by title or id" value="{{ request()->input('search') }}" id="searchInput" style="width: 250px;" required>
-            <button class="btn btn-success fw-semibold" type="submit" id="searchButton" disabled>Search</button>
+            <div class="input-group w-auto">
+                <input class="form-control" type="search" name="search" placeholder="Search by title or id" value="{{ request()->input('search') }}" id="searchInput" required>
+                <button class="input-group-text btn btn-success" type="submit" id="searchButton" disabled>
+                    <img src="{{ asset('images/search.svg') }}" alt="Search Icon" style="width: 18px; height: 18px; filter: invert(1);">
+                </button>
+            </div>
         </form>
     </div>
 
@@ -67,14 +23,114 @@
         <table class="table table-hover table-bordered align-middle mb-0">
             <thead class="table-dark">
                 <tr>
-                    <th scope="col" class="py-3 px-3" style="width: 10%;">Ticket ID</th>
-                    <th scope="col" class="py-3 px-3" style="width: 20%;">Title</th>
-                    <th scope="col" class="py-3 px-3" style="width: 5%;">Status</th>
-                    <th scope="col" class="py-3 px-3" style="width: 5%;">Priority</th>
-                    <th scope="col" class="py-3 px-3" style="width: 10%;">Assigned To</th>
-                    <th scope="col" class="py-3 px-3" style="width: 10%;">Created At</th>
-                    <th scope="col" class="py-3 px-3" style="width: 10%;">Updated At</th>
-                    <th scope="col" class="py-3 px-3" style="width: 10%;">Resolved At</th>
+                    <th scope="col" class="p-3 text-white" style="width: 10%;">Ticket ID</th>
+                    <th scope="col" class="p-3 text-white" style="width: 20%;">Title</th>
+                    <th scope="col" class="p-3" style="width: 5%;">
+                        <div class="dropdown">
+                            <button class="btn dropdown-toggle p-0 text-white fw-bold border-0 bg-transparent underlineHover" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+                                <span>Status</span>
+                            </button>
+                            <ul class="dropdown-menu shadow-lg" style="padding-left: 12px;">
+                                <li class="form-check mb-1">
+                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                    <label class="form-check-label fw-normal" for="defaultCheck1">
+                                        Show All
+                                    </label>
+                                </li>
+                                <li class="form-check mb-1">
+                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
+                                    <label class="form-check-label fw-normal" for="defaultCheck2">
+                                        Open
+                                    </label>
+                                </li>
+                                <li class="form-check mb-1">
+                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck3">
+                                    <label class="form-check-label fw-normal" for="defaultCheck3">
+                                        On Hold
+                                    </label>
+                                </li>
+                                <li class="form-check mb-1">
+                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck4">
+                                    <label class="form-check-label fw-normal" for="defaultCheck4">
+                                        In Progress
+                                    </label>
+                                </li>
+                                <li class="form-check mb-0">
+                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck5">
+                                    <label class="form-check-label fw-normal" for="defaultCheck5">
+                                        Closed
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+                    <th scope="col" class="p-3" style="width: 5%;">
+                        <div class="dropdown">
+                            <button class="btn dropdown-toggle p-0 text-white fw-bold border-0 bg-transparent underlineHover" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+                                <span>Priority</span>
+                            </button>
+                            <ul class="dropdown-menu shadow-lg" style="padding-left: 12px;">
+                                <li class="form-check mb-1">
+                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                    <label class="form-check-label fw-normal" for="defaultCheck1">
+                                        Show All
+                                    </label>
+                                </li>
+                                <li class="form-check mb-1">
+                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
+                                    <label class="form-check-label fw-normal" for="defaultCheck2">
+                                        Urgent
+                                    </label>
+                                </li>
+                                <li class="form-check mb-1">
+                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck3">
+                                    <label class="form-check-label fw-normal" for="defaultCheck3">
+                                        Important
+                                    </label>
+                                </li>
+                                <li class="form-check mb-0">
+                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck4">
+                                    <label class="form-check-label fw-normal" for="defaultCheck4">
+                                        Standard
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+                    <th scope="col" class="p-3" style="width: 10%;">
+                        @if (Auth::user()->role === 'admin')
+                            <div class="dropdown">
+                                <button class="btn dropdown-toggle p-0 text-white fw-bold border-0 bg-transparent underlineHover" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+                                    <span>Assigned To</span>
+                                </button>
+                                <ul class="dropdown-menu shadow-lg" style="width: 11rem; padding-left: 12px;">
+                                    <li class="form-check mb-1">
+                                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                        <label class="form-check-label fw-normal" for="defaultCheck1">
+                                            Show All
+                                        </label>
+                                    </li>
+                                    <li class="form-check mb-1">
+                                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
+                                        <label class="form-check-label fw-normal" for="defaultCheck2">
+                                            Unassigned
+                                        </label>
+                                    </li>
+                                    <li class="form-check mb-0">
+                                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck3">
+                                        <label class="form-check-label fw-normal" for="defaultCheck3">
+                                            Assigned to Me
+                                        </label>
+                                    </li>
+                                </ul>
+                            </div>
+                        @else
+                            Assigned To
+                        @endif
+                    </th>
+                    <th scope="col" class="p-3 text-white" style="width: 10%;">Created At</th>
+                    <th scope="col" class="p-3 text-white" style="width: 10%;">Updated At</th>
+                    <th scope="col" class="p-3 text-white" style="width: 10%;">Resolved At</th>
                 </tr>
             </thead>
 
@@ -85,32 +141,32 @@
                         <a href="{{ route('ticket.show', $ticket->id) }}">#{{ $ticket->id }}</a>
                     </th>
                     <td class="py-2 px-3">
-                        <a href="{{ route('ticket.show', $ticket->id) }}" class="text-decoration-none text-black fw-semibold text-break">{{ $ticket->title }}</a>
+                        <a href="{{ route('ticket.show', $ticket->id) }}" class="underlineHover text-black fw-semibold text-break">{{ $ticket->title }}</a>
                     </td>
                     <td class="py-2 px-3">
-                        <span class="badge bg-{{ strtolower(str_replace(' ', '-', $ticket->status)) }} fs-6">
+                        <span class="badge text-bg-{{ strtolower(str_replace(' ', '-', $ticket->status)) }} fs-6">
                             {{ $ticket->status }}
                         </span>
                     </td>
                     <td class="py-2 px-3">
-                        <span class="badge bg-{{ lcfirst($ticket->priority) }} fs-6">
+                        <span class="badge text-bg-{{ lcfirst($ticket->priority) }} fs-6">
                             {{ $ticket->priority }}
                         </span>
                     </td>
-                    <td class="py-2 px-3">
+                    <td class="py-2 px-3 text-nowrap">
                         @if ($ticket->handler_id)
                             {{ $ticket->handler->name }}
                         @else
                             <span class="text-red-600 fw-semibold">Unassigned</span>
                         @endif
                     </td>
-                    <td class="py-2 px-3 text-center">
+                    <td class="py-2 px-3">
                         {{ $ticket->created_at->format('d/m/Y') }}<br>{{ $ticket->created_at->format('H:i:s') }}
                     </td>
-                    <td class="py-2 px-3 text-center">
+                    <td class="py-2 px-3">
                         {!! $ticket->updated_at ? $ticket->updated_at->format('d/m/Y') . '<br>' . $ticket->updated_at->format('H:i:s') : '-' !!}
                     </td>
-                    <td class="py-2 px-3 text-center">
+                    <td class="py-2 px-3">
                         {!! $ticket->resolved_at ? $ticket->resolved_at->format('d/m/Y') . '<br>' . $ticket->resolved_at->format('H:i:s') : '-' !!}
                     </td>
                 </tr>

@@ -55,11 +55,7 @@
             <div>
                 <ul class="pagination mt-3 mb-0 pt-1">
                     {{-- Previous Page Link --}}
-                    @if ($paginator->onFirstPage())
-                        <li class="page-item disabled" aria-disabled="true" aria-label="@lang('pagination.previous')">
-                            <span class="page-link" aria-hidden="true" style="padding: 7px 20px;">&lsaquo;</span>
-                        </li>
-                    @else
+                    @if (!$paginator->onFirstPage())
                         <li class="page-item">
                             <a class="page-link" href="{{ $paginator->previousPageUrl() }}" rel="prev" aria-label="@lang('pagination.previous')" style="padding: 7px 20px;">&lsaquo;</a>
                         </li>
@@ -88,10 +84,6 @@
                     @if ($paginator->hasMorePages())
                         <li class="page-item">
                             <a class="page-link" href="{{ $paginator->nextPageUrl() }}" rel="next" aria-label="@lang('pagination.next')" style="padding: 7px 20px;">&rsaquo;</a>
-                        </li>
-                    @else
-                        <li class="page-item disabled" aria-disabled="true" aria-label="@lang('pagination.next')">
-                            <span class="page-link" aria-hidden="true" style="padding: 7px 20px;">&rsaquo;</span>
                         </li>
                     @endif
                 </ul>

@@ -17,7 +17,7 @@
     <body>
         <x-guest-layout>
             <div class="d-flex justify-content-center pt-2 pb-3">
-                <img src="{{ asset('images\logo-cjfi.png') }}" alt="Company Logo" width="60" height="60">
+                <img src="{{ asset('images/logo-cjfi.png') }}" alt="Company Logo" width="60" height="60">
             </div>
 
             <!-- Tabs -->

@@ -25,15 +25,15 @@
             <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" style="width: 200px;">
                 {{ old('department') ? old('department') : 'Select department' }}
             </button>
-            <ul class="dropdown-menu">
-                <li><button type="button" class="btn btn-secondary dropdown-item" onclick="changeText('IT')">IT</button></li>
-                <li><button type="button" class="btn btn-secondary dropdown-item" onclick="changeText('Finance')">Finance</button></li>
-                <li><button type="button" class="btn btn-secondary dropdown-item" onclick="changeText('HR')">HR</button></li>
-                <li><button type="button" class="btn btn-secondary dropdown-item" onclick="changeText('Accounting')">Accounting</button></li>
-                <li><button type="button" class="btn btn-secondary dropdown-item" onclick="changeText('Audit')">Audit</button></li>
-                <li><button type="button" class="btn btn-secondary dropdown-item" onclick="changeText('Marketing')">Marketing</button></li>
-                <li><button type="button" class="btn btn-secondary dropdown-item" onclick="changeText('Tax')">Tax</button></li>
-                <li><button type="button" class="btn btn-secondary dropdown-item" onclick="changeText('Others')">Others</button></li>
+            <ul class="dropdown-menu shadow-lg py-0">
+                <li><button type="button" class="btn btn-secondary dropdown-item rounded-1" onclick="changeText('IT')">IT</button></li>
+                <li><button type="button" class="btn btn-secondary dropdown-item rounded-1" onclick="changeText('Finance')">Finance</button></li>
+                <li><button type="button" class="btn btn-secondary dropdown-item rounded-1" onclick="changeText('HR')">HR</button></li>
+                <li><button type="button" class="btn btn-secondary dropdown-item rounded-1" onclick="changeText('Accounting')">Accounting</button></li>
+                <li><button type="button" class="btn btn-secondary dropdown-item rounded-1" onclick="changeText('Audit')">Audit</button></li>
+                <li><button type="button" class="btn btn-secondary dropdown-item rounded-1" onclick="changeText('Marketing')">Marketing</button></li>
+                <li><button type="button" class="btn btn-secondary dropdown-item rounded-1" onclick="changeText('Tax')">Tax</button></li>
+                <li><button type="button" class="btn btn-secondary dropdown-item rounded-1" onclick="changeText('Others')">Others</button></li>
             </ul>
         </div>
         <input type="hidden" id="department" name="department" value="{{ old('department') }}">

@@ -7,8 +7,7 @@
 
         <title>@yield('title')</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net" rel="preconnect">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
@@ -16,48 +15,200 @@
 
         <!-- Styles -->
         <style>
-            /* Buttons */
-            .bg-open {
-                background-color: green;
+            /* Status */
+            .btn-open {
+                --bs-btn-color: white;
+                --bs-btn-bg: #008000;
+                --bs-btn-border-color: #008000;
+                --bs-btn-hover-color: white;
+                --bs-btn-hover-bg: #007500;
+                --bs-btn-hover-border-color: #006700;
+                --bs-btn-focus-shadow-rgb: 225, 83, 97;
+                --bs-btn-active-color: white;
+                --bs-btn-active-bg: #006700;
+                --bs-btn-active-border-color: #005a00;
+                --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+                --bs-btn-disabled-color: white;
+                --bs-btn-disabled-bg: #008000;
+                --bs-btn-disabled-border-color: #008000;
+            }
+            .text-bg-open {
+                background-color: #008000;
                 color: white;
                 padding: 10px 12px;
             }
-            .bg-in-progress, .btn.bg-in-progress:hover, .btn.bg-in-progress:active, .btn.bg-in-progress:focus {
-                background-color: blue;
-                color: white;
-                padding: 10px 12px;
+
+            .btn-on-hold {
+                --bs-btn-color: black;
+                --bs-btn-bg: #ffc107;
+                --bs-btn-border-color: #ffc107;
+                --bs-btn-hover-color: black;
+                --bs-btn-hover-bg: #ffca2c;
+                --bs-btn-hover-border-color: #ffc720;
+                --bs-btn-focus-shadow-rgb: 217, 164, 6;
+                --bs-btn-active-color: black;
+                --bs-btn-active-bg: #ffcd39;
+                --bs-btn-active-border-color: #ffc720;
+                --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+                --bs-btn-disabled-color: black;
+                --bs-btn-disabled-bg: #ffc107;
+                --bs-btn-disabled-border-color: #ffc107;
             }
-            .bg-on-hold, .btn.bg-on-hold:hover, .btn.bg-on-hold:active, .btn.bg-on-hold:focus {
-                background-color: yellow;
+            .text-bg-on-hold {
+                background-color: #ffc107;
                 color: black;
                 padding: 10px 12px;
             }
-            .bg-closed, .btn.bg-closed:hover, .btn.bg-closed:active, .btn.bg-closed:focus {
-                background-color: black;
+
+            .btn-in-progress {
+                --bs-btn-color: white;
+                --bs-btn-bg: #0000ff;
+                --bs-btn-border-color: #0000ff;
+                --bs-btn-hover-color: white;
+                --bs-btn-hover-bg: #0000e5;
+                --bs-btn-hover-border-color: #0000d0;
+                --bs-btn-focus-shadow-rgb: 225, 83, 97;
+                --bs-btn-active-color: white;
+                --bs-btn-active-bg: #0000d0;
+                --bs-btn-active-border-color: #0000af;
+                --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+                --bs-btn-disabled-color: white;
+                --bs-btn-disabled-bg: #0000ff;
+                --bs-btn-disabled-border-color: #0000ff;
+            }
+            .text-bg-in-progress {
+                background-color: #0000ff;
                 color: white;
                 padding: 10px 12px;
             }
-            
-            .bg-low, .btn.bg-low:hover, .btn.bg-low:active, .btn.bg-low:focus {
-                background-color: #20c997;
+
+            .btn-closed {
+                --bs-btn-color: white;
+                --bs-btn-bg: #212529;
+                --bs-btn-border-color: #212529;
+                --bs-btn-hover-color: white;
+                --bs-btn-hover-bg: #424649;
+                --bs-btn-hover-border-color: #373b3e;
+                --bs-btn-focus-shadow-rgb: 66, 70, 73;
+                --bs-btn-active-color: white;
+                --bs-btn-active-bg: #4d5154;
+                --bs-btn-active-border-color: #373b3e;
+                --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+                --bs-btn-disabled-color: white;
+                --bs-btn-disabled-bg: #212529;
+                --bs-btn-disabled-border-color: #212529;
+            }
+            .text-bg-closed {
+                background-color: #212529;
                 color: white;
                 padding: 10px 12px;
             }
-            .bg-urgent, .btn.bg-urgent:hover, .btn.bg-urgent:active, .btn.bg-urgent:focus {
-                background-color: #ee7d21;
+
+            /* Priority */
+            .btn-standard {
+                --bs-btn-color: white;
+                --bs-btn-bg: #15b585;
+                --bs-btn-border-color: #15b585;
+                --bs-btn-hover-color: white;
+                --bs-btn-hover-bg: #14ae80;
+                --bs-btn-hover-border-color: #13a579;
+                --bs-btn-focus-shadow-rgb: 225, 83, 97;
+                --bs-btn-active-color: white;
+                --bs-btn-active-bg: #13a579;
+                --bs-btn-active-border-color: #129e74;
+                --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+                --bs-btn-disabled-color: white;
+                --bs-btn-disabled-bg: #15b585;
+                --bs-btn-disabled-border-color: #15b585;
+            }
+            .text-bg-standard {
+                background-color: #15b585;
                 color: white;
                 padding: 10px 12px;
             }
-            .bg-emergency, .btn.bg-emergency:hover, .btn.bg-emergency:active, .btn.bg-emergency:focus {
+
+            .btn-important {
+                --bs-btn-color: white;
+                --bs-btn-bg: #fd7e14;
+                --bs-btn-border-color: #fd7e14;
+                --bs-btn-hover-color: white;
+                --bs-btn-hover-bg: #df6e11;
+                --bs-btn-hover-border-color: #c9620e;
+                --bs-btn-focus-shadow-rgb: 225, 83, 97;
+                --bs-btn-active-color: white;
+                --bs-btn-active-bg: #c9620e;
+                --bs-btn-active-border-color: #b2570c;
+                --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+                --bs-btn-disabled-color: white;
+                --bs-btn-disabled-bg: #fd7e14;
+                --bs-btn-disabled-border-color: #fd7e14;
+            }
+            .text-bg-important {
+                background-color: #fd7e14;
+                color: white;
+                padding: 10px 12px;
+            }
+
+            .btn-urgent {
+                --bs-btn-color: white;
+                --bs-btn-bg: #e5192e;
+                --bs-btn-border-color: #e5192e;
+                --bs-btn-hover-color: white;
+                --bs-btn-hover-bg: #cf1628;
+                --bs-btn-hover-border-color: #b21222;
+                --bs-btn-focus-shadow-rgb: 225, 83, 97;
+                --bs-btn-active-color: white;
+                --bs-btn-active-bg: #b21222;
+                --bs-btn-active-border-color: #a4101f;
+                --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+                --bs-btn-disabled-color: white;
+                --bs-btn-disabled-bg: #e5192e;
+                --bs-btn-disabled-border-color: #e5192e;
+            }
+            .text-bg-urgent {
                 background-color: #e5192e;
                 color: white;
                 padding: 10px 12px;
             }
 
-            .sortTable {
+            .form-control:focus {
+                color: var(--bs-body-color);
+                background-color: var(--bs-body-bg);
+                border-color: black;
+                outline: 0;
+                box-shadow: 0 0 0 .02rem black;
+            }
+
+            .sortIcon {
+                background: url('{{ asset('images/sort-alt.svg') }}') no-repeat left center;
+                background-size: 20px;
+                padding-left: 40px;
+            }
+
+            .form-check-input {
+                width: 1.1em;
+                height: 1.1em;
+                margin-top: .2em;
+                margin-right: .6em;
+                border-color: lightgray;
+            }
+            .form-check-input:hover {
+                background-color: lightgray;
+            }
+            .form-check-input:focus {
+                border-color: #04592D;
+                outline: 0;
+                box-shadow: 0 0 0 .02rem #04592D;
+            }
+            .form-check-input:checked, .form-check-input:checked:hover, .form-check-input:checked:focus {
+                background-color: #04592D;
+                border-color: #04592D;
+            }
+
+            .underlineHover {
                 text-decoration: none;
             }
-            .sortTable:hover {
+            .underlineHover:hover {
                 text-decoration: underline;
             }
             

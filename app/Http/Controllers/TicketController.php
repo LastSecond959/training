@@ -28,12 +28,15 @@ class TicketController extends Controller
         })->orderByRaw("
             CASE 
                 WHEN status = 'Open' THEN 1
-                WHEN handler_id = ? THEN 2
-                ELSE 3
+                WHEN status = 'On Hold' AND handler_id = ? THEN 2
+                WHEN status = 'In Progress' AND handler_id = ? THEN 3
+                WHEN status = 'On Hold' THEN 4
+                WHEN status = 'In Progress' THEN 5
+                ELSE 6
             END,
             FIELD(status, 'Open', 'On Hold', 'In Progress', 'Closed'),
-            FIELD(priority, 'Emergency', 'Urgent', 'Low')
-        ", [Auth::id()]);
+            FIELD(priority, 'Urgent', 'Important', 'Standard')
+        ", [Auth::id(), Auth::id()]);
 
         if (Auth::user()->role === 'user') {
             $ticketList = $sort->where('requester_id', Auth::id())->paginate(10)->withQueryString();
@@ -61,7 +64,7 @@ class TicketController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|max:255',
             'description' => 'required',
-            'priority' => 'required|in:Low,Urgent,Emergency',
+            'priority' => 'required|in:Standard,Important,Urgent',
         ]);
         
         // Create a new ticket
@@ -134,7 +137,7 @@ class TicketController extends Controller
             $request->validate([
                 'title' => 'required|max:255',
                 'description' => 'required',
-                'priority' => 'required|in:Low,Urgent,Emergency',
+                'priority' => 'required|in:Standard,Important,Urgent',
             ]);
             
             $ticket = Ticket::findOrFail($id);

@@ -28,13 +28,13 @@
                             <tr>
                                 <th scope="row" style="width: 35%;">Status</th>
                                 <td class="fs-5">
-                                    <span class="badge bg-{{ strtolower(str_replace(' ', '-', $ticket->status)) }}">{{ $ticket->status }}</span>
+                                    <span class="badge text-bg-{{ strtolower(str_replace(' ', '-', $ticket->status)) }}">{{ $ticket->status }}</span>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row" style="width: 35%;">Priority</th>
                                 <td class="fs-5">
-                                    <span class="badge bg-{{ lcfirst($ticket->priority) }}">{{ $ticket->priority }}</span>
+                                    <span class="badge text-bg-{{ lcfirst($ticket->priority) }}">{{ $ticket->priority }}</span>
                                 </td>
                             </tr>
                             <tr>
@@ -102,35 +102,45 @@
 
                                         <div class="d-flex justify-content-between"> 
                                             <div class="col-6">
-                                                <label for="status{{ $ticket->id }}" class="block text-black font-bold">
+                                                <label for="status{{ $ticket->id }}" class="block text-black fw-bold">
                                                     Status<span class="text-red-600">*</span>
                                                 </label>
-                                                <div class="btn-group dropend" style="margin-bottom: 60px;">
-                                                    <button id="statusDropdown{{ $ticket->id }}" type="button" class="btn bg-{{ strtolower(str_replace(' ', '-', $ticket->status)) }} dropdown-toggle" data-bs-toggle="dropdown" style="width: 150px; padding: 10px 12px">
-                                                        <span id="statusBtnColor{{ $ticket->id }}" class="{{ $ticket->status == 'On Hold' ? 'text-black' : 'text-white' }} font-bold">{{ $ticket->status }}</span>
+                                                <div class="btn-group dropend">
+                                                    <button id="statusDropdown{{ $ticket->id }}" type="button" class="btn btn-{{ strtolower(str_replace(' ', '-', $ticket->status)) }} dropdown-toggle" data-bs-toggle="dropdown" style="width: 150px; padding: 10px 12px">
+                                                        <span id="statusBtnColor{{ $ticket->id }}" class="fw-bold">{{ $ticket->status }}</span>
                                                     </button>
-                                                    <ul class="dropdown-menu" style="padding: 2px 0px">
-                                                        <li><button type="button" class="dropdown-item py-2" onclick="changeStatus('In Progress')">In Progress</button></li>
-                                                        <li><button type="button" class="dropdown-item py-2" onclick="changeStatus('On Hold')">On Hold</button></li>
-                                                        <li><button type="button" class="dropdown-item py-2" onclick="changeStatus('Closed')">Closed</button></li>
+                                                    <ul class="dropdown-menu shadow py-0">
+                                                        <li><button type="button" class="btn btn-in-progress dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changeStatus('In Progress')">In Progress</button></li>
+                                                        <li><button type="button" class="btn btn-on-hold dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changeStatus('On Hold')">On Hold</button></li>
+                                                        <li><button type="button" class="btn btn-closed dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changeStatus('Closed')">Closed</button></li>
                                                     </ul>
                                                 </div>
                                                 <input type="hidden" id="status{{ $ticket->id }}" name="status" value="{{ old('status', $ticket->status) }}" required>
                                             </div>
-    
-                                            <div id="selectAdmin{{ $ticket->id }}" class="col-6" style="display: none;">
-                                                <label for="handler{{ $ticket->id }}" class="block text-black font-bold">
+
+                                            <div class="col-6">
+                                                <label for="handler{{ $ticket->id }}" class="block text-black fw-bold">
                                                     Change handler to:
                                                 </label>
-                                                <select name="handler_id" id="handlerDropdown{{ $ticket->id }}" class="rounded mt-1">
-                                                    @foreach ($adminList as $admin)
-                                                        @if ($admin->id == $ticket->handler_id)
-                                                            <option value="{{ $admin->id }}" selected>{{ $admin->name }}</option>
-                                                        @else
-                                                            <option value="{{ $admin->id }}">{{ $admin->name }}</option>
-                                                        @endif
-                                                    @endforeach
-                                                </select>
+                                                <div class="btn-group dropend">
+                                                    <button id="selectAdmin{{ $ticket->id }}" type="button" class="btn btn-outline-secondary text-wrap dropdown-toggle position-relative" data-bs-toggle="dropdown" style="width: 170px; padding: 10px 12px" disabled>
+                                                        <span>{{ $ticket->handler->name }}</span>
+                                                        <span id="changeAdminIndicator{{ $ticket->id }}" class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-secondary rounded-circle" style="display: none;">
+                                                            <span class="visually-hidden">Modified</span>
+                                                        </span>
+                                                    </button>
+                                                    <ul class="dropdown-menu shadow py-0">
+                                                        <li><button type="button" id="currentHandler{{ $ticket->id }}" class="btn btn-outline-secondary dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changeHandler('{{ $ticket->handler_id }}', '{{ $ticket->handler->name }}')" disabled>{{ $ticket->handler->name }}</button></li>
+                                                        <li><hr class="dropdown-divider m-0"></li>
+                                                        @foreach ($adminList as $admin)
+                                                            @if ($admin->id != $ticket->handler_id)
+                                                                <li><button type="button" class="btn btn-outline-secondary dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changeHandler('{{ $admin->id }}', '{{ $admin->name }}')">{{ $admin->name }}</button></li>
+                                                            @endif
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                                <!-- new handler not submitted -->
+                                                <input type="hidden" id="handler{{ $ticket->id }}" name="handler" value="{{ old('handler', $ticket->handler_id) }}" required>
                                             </div>
                                         </div>
 
@@ -151,6 +161,34 @@
                         </div>
                     </div>
                     <script>
+                        function changeStatus(status) {
+                            const statusDropdown = document.getElementById('statusDropdown{{ $ticket->id }}');
+                            
+                            document.getElementById('status{{ $ticket->id }}').value = status;
+                            statusDropdown.querySelector('span').textContent = status;
+                            statusDropdown.classList.remove('btn-in-progress', 'btn-on-hold', 'btn-closed');
+                            statusDropdown.classList.add('btn-' + status.toLowerCase().replace(/ /g, '-'));
+                            
+                            const adminBtn = document.getElementById('selectAdmin{{ $ticket->id }}');
+                            if (status === 'On Hold') {
+                                adminBtn.disabled = false;
+                                adminBtn.classList.remove('btn-outline-secondary');
+                                adminBtn.classList.add('btn-secondary');
+                            }
+                            else {
+                                adminBtn.disabled = true;
+                                adminBtn.classList.remove('btn-secondary');
+                                adminBtn.classList.add('btn-outline-secondary');
+                            }
+                        }
+
+                        function changeHandler(handlerId, handlerName) {
+                            document.getElementById('selectAdmin{{ $ticket->id }}').querySelector('span').textContent = handlerName;
+                            document.getElementById('handler{{ $ticket->id }}').value = handlerId;
+                            document.getElementById('currentHandler{{ $ticket->id }}').disabled = (handlerId === '{{ $ticket->handler_id }}');
+                            document.getElementById('changeAdminIndicator{{ $ticket->id }}').style.display = (handlerId !== '{{ $ticket->handler_id }}') ? 'block' : 'none';
+                        }
+
                         // function handleTicket(ticketId) {
                         //     fetch(`/ticket/${ticketId}`, {
                         //         method: 'PATCH',
@@ -165,17 +203,6 @@
                         //     })
                         //     .then(response => response.ok ? location.reload() : alert('Error updating ticket'));
                         // }
-
-                        function changeStatus(status) {
-                            document.getElementById('statusDropdown{{ $ticket->id }}').querySelector('span').textContent = status;
-                            document.getElementById('status{{ $ticket->id }}').value = status;
-                            document.getElementById('statusDropdown{{ $ticket->id }}').classList.remove('bg-open', 'bg-in-progress', 'bg-on-hold', 'bg-closed');
-                            document.getElementById('statusDropdown{{ $ticket->id }}').classList.add('bg-' + status.toLowerCase().replace(/ /g, '-'));
-                            document.getElementById('statusBtnColor{{ $ticket->id }}').classList.remove('text-black', 'text-white');
-                            document.getElementById('statusBtnColor{{ $ticket->id }}').classList.add('text-' + (status !== 'On Hold' ? 'white' : 'black'));
-
-                            document.getElementById('selectAdmin{{ $ticket->id }}').style.display = (status !== 'On Hold') ? 'none' : 'block';
-                        }
                     </script>
                 @endif
             </div>

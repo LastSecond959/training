@@ -31,12 +31,12 @@
         </label>
         <div class="btn-group dropend mb-5">
             <button id="priorityDropdown" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" style="width: 150px; padding: 10px 12px">
-                <span class="text-white font-bold">Set Priority</span>
+                <span class="fw-bold">Set Priority</span>
             </button>
-            <ul class="dropdown-menu" style="padding: 2px 0px">
-                <li><button type="button" class="dropdown-item py-2" onclick="changePriority('Low')">Low</button></li>
-                <li><button type="button" class="dropdown-item py-2" onclick="changePriority('Urgent')">Urgent</button></li>
-                <li><button type="button" class="dropdown-item py-2" onclick="changePriority('Emergency')">Emergency</button></li>
+            <ul class="dropdown-menu py-0">
+                <li><button type="button" class="btn btn-standard dropdown-item rounded-1 py-2" onclick="changePriority('Standard')">Standard</button></li>
+                <li><button type="button" class="btn btn-important dropdown-item rounded-1 py-2" onclick="changePriority('Important')">Important</button></li>
+                <li><button type="button" class="btn btn-urgent dropdown-item rounded-1 py-2" onclick="changePriority('Urgent')">Urgent</button></li>
             </ul>
         </div>
         <input type="hidden" id="priority" name="priority" value="{{ old('priority') }}" required>
@@ -52,8 +52,8 @@
             function changePriority(priority) {
                 document.getElementById('priorityDropdown').querySelector('span').textContent = priority;
                 document.getElementById('priority').value = priority;
-                document.getElementById('priorityDropdown').classList.remove('btn-secondary', 'bg-low', 'bg-urgent', 'bg-emergency');
-                document.getElementById('priorityDropdown').classList.add('bg-' + priority.toLowerCase());
+                document.getElementById('priorityDropdown').classList.remove('btn-secondary', 'btn-standard', 'btn-important', 'btn-urgent');
+                document.getElementById('priorityDropdown').classList.add('btn-' + priority.toLowerCase());
             }
         </script>
     </form>

@@ -28,13 +28,13 @@
                             <tr>
                                 <th scope="row" style="width: 35%;">Status</th>
                                 <td class="fs-5">
-                                    <span class="badge bg-{{ strtolower(str_replace(' ', '-', $ticket->status)) }}">{{ $ticket->status }}</span>
+                                    <span class="badge text-bg-{{ strtolower(str_replace(' ', '-', $ticket->status)) }}">{{ $ticket->status }}</span>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row" style="width: 35%;">Priority</th>
                                 <td class="fs-5">
-                                    <span class="badge bg-{{ lcfirst($ticket->priority) }}">{{ $ticket->priority }}</span>
+                                    <span class="badge text-bg-{{ lcfirst($ticket->priority) }}">{{ $ticket->priority }}</span>
                                 </td>
                             </tr>
                             <tr>

@@ -106,7 +106,7 @@
                                                     Status<span class="text-red-600">*</span>
                                                 </label>
                                                 <div class="btn-group dropend">
-                                                    <button id="statusDropdown{{ $ticket->id }}" type="button" class="btn btn-{{ strtolower(str_replace(' ', '-', $ticket->status)) }} dropdown-toggle" data-bs-toggle="dropdown" style="width: 150px; padding: 10px 12px">
+                                                    <button id="statusDropdown{{ $ticket->id }}" type="button" class="btn btn-{{ strtolower(str_replace(' ', '-', $ticket->status)) }} dropdown-toggle" data-bs-toggle="dropdown" style="width: 150px; padding: 10px 12px;">
                                                         <span id="statusBtnColor{{ $ticket->id }}" class="fw-bold">{{ $ticket->status }}</span>
                                                     </button>
                                                     <ul class="dropdown-menu shadow py-0">
@@ -123,7 +123,7 @@
                                                     Change handler to:
                                                 </label>
                                                 <div class="btn-group dropend">
-                                                    <button id="selectAdmin{{ $ticket->id }}" type="button" class="btn btn-outline-secondary text-wrap dropdown-toggle position-relative" data-bs-toggle="dropdown" style="width: 170px; padding: 10px 12px" disabled>
+                                                    <button id="selectAdmin{{ $ticket->id }}" type="button" class="btn btn-outline-secondary text-wrap dropdown-toggle position-relative" data-bs-toggle="dropdown" style="width: 170px; padding: 10px 12px;" {{ $ticket->status !== 'On Hold' ? 'disabled' : '' }}>
                                                         <span>{{ $ticket->handler->name }}</span>
                                                         <span id="changeAdminIndicator{{ $ticket->id }}" class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-secondary rounded-circle" style="display: none;">
                                                             <span class="visually-hidden">Modified</span>
@@ -140,7 +140,7 @@
                                                     </ul>
                                                 </div>
                                                 <!-- new handler not submitted -->
-                                                <input type="hidden" id="handler{{ $ticket->id }}" name="handler" value="{{ old('handler', $ticket->handler_id) }}" required>
+                                                <input type="hidden" id="handler{{ $ticket->id }}" name="handler_id" value="{{ old('handler_id', $ticket->handler_id) }}" required>
                                             </div>
                                         </div>
 
@@ -183,6 +183,8 @@
                         }
 
                         function changeHandler(handlerId, handlerName) {
+                            console.log(`New Handler ID: ${handlerId}, Name: ${handlerName}`);
+
                             document.getElementById('selectAdmin{{ $ticket->id }}').querySelector('span').textContent = handlerName;
                             document.getElementById('handler{{ $ticket->id }}').value = handlerId;
                             document.getElementById('currentHandler{{ $ticket->id }}').disabled = (handlerId === '{{ $ticket->handler_id }}');

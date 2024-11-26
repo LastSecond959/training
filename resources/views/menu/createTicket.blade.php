@@ -11,7 +11,7 @@
 
         <!-- Title Field -->
         <div class="mb-3">
-            <label for="title" class="block text-black font-bold">
+            <label for="title" class="block text-black fw-bold">
                 Title<span class="text-red-600">*</span>
             </label>
             <input type="text" name="title" id="title" class="rounded mt-1 w-full" required>
@@ -19,24 +19,24 @@
 
         <!-- Description Field -->
         <div class="mb-3">
-            <label for="description" class="block text-black font-bold">
+            <label for="description" class="block text-black fw-bold">
                 Description<span class="text-red-600">*</span>
             </label>
             <textarea name="description" id="description" class="rounded mt-1 w-full" style="height: 250px;" required></textarea>
         </div>
 
         <!-- Priority Field -->
-        <label for="priority" class="block text-black font-bold">
+        <label for="priority" class="block text-black fw-bold">
             Priority<span class="text-red-600">*</span>
         </label>
         <div class="btn-group dropend mb-5">
-            <button id="priorityDropdown" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" style="width: 150px; padding: 10px 12px">
+            <button id="priorityDropdown" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" style="width: 150px; padding: 10px 12px;">
                 <span class="fw-bold">Set Priority</span>
             </button>
             <ul class="dropdown-menu py-0">
-                <li><button type="button" class="btn btn-standard dropdown-item rounded-1 py-2" onclick="changePriority('Standard')">Standard</button></li>
-                <li><button type="button" class="btn btn-important dropdown-item rounded-1 py-2" onclick="changePriority('Important')">Important</button></li>
-                <li><button type="button" class="btn btn-urgent dropdown-item rounded-1 py-2" onclick="changePriority('Urgent')">Urgent</button></li>
+                <li><button type="button" class="btn btn-standard dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changePriority('Standard')">Standard</button></li>
+                <li><button type="button" class="btn btn-important dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changePriority('Important')">Important</button></li>
+                <li><button type="button" class="btn btn-urgent dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changePriority('Urgent')">Urgent</button></li>
             </ul>
         </div>
         <input type="hidden" id="priority" name="priority" value="{{ old('priority') }}" required>
@@ -44,7 +44,7 @@
         <!-- Submit Button -->
         <div class="d-grid mt-5">
             <button type="submit" class="btn btn-success py-3">
-                <span class="text-white font-bold fs-5">Submit Ticket</span>
+                <span class="text-white fw-bold fs-5">Submit Ticket</span>
             </button>
         </div>
         

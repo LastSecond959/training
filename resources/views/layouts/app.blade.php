@@ -179,12 +179,6 @@
                 box-shadow: 0 0 0 .02rem black;
             }
 
-            .sortIcon {
-                background: url('{{ asset('images/sort-alt.svg') }}') no-repeat left center;
-                background-size: 20px;
-                padding-left: 40px;
-            }
-
             .form-check-input {
                 width: 1.1em;
                 height: 1.1em;

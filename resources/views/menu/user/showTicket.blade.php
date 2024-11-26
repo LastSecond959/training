@@ -90,30 +90,30 @@
                                         @method('PUT')
 
                                         <div class="mb-3">
-                                            <label for="title{{ $ticket->id }}" class="block text-black font-bold">
+                                            <label for="title{{ $ticket->id }}" class="block text-black fw-bold">
                                                 Title<span class="text-red-600">*</span>
                                             </label>
                                             <input type="text" name="title" id="title{{ $ticket->id }}" class="rounded mt-1 w-full" value="{{ $ticket->title }}" required>
                                         </div>
 
                                         <div class="mb-3">
-                                            <label for="description{{ $ticket->id }}" class="block text-black font-bold">
+                                            <label for="description{{ $ticket->id }}" class="block text-black fw-bold">
                                                 Description<span class="text-red-600">*</span>
                                             </label>
                                             <textarea name="description" id="description{{ $ticket->id }}" class="rounded mt-1 w-full" style="height: 250px;" required>{{ $ticket->description }}</textarea>
                                         </div>
                                         
-                                        <label for="priority{{ $ticket->id }}" class="block text-black font-bold">
+                                        <label for="priority{{ $ticket->id }}" class="block text-black fw-bold">
                                             Priority<span class="text-red-600">*</span>
                                         </label>
                                         <div class="btn-group dropend mb-5">
-                                            <button id="priorityDropdown{{ $ticket->id }}" type="button" class="btn bg-{{ lcfirst($ticket->priority) }} dropdown-toggle" data-bs-toggle="dropdown" style="width: 150px; padding: 10px 12px">
-                                                <span class="text-white font-bold">{{ $ticket->priority }}</span>
+                                            <button id="priorityDropdown{{ $ticket->id }}" type="button" class="btn btn-{{ lcfirst($ticket->priority) }} dropdown-toggle" data-bs-toggle="dropdown" style="width: 150px; padding: 10px 12px;">
+                                                <span class="text-white fw-bold">{{ $ticket->priority }}</span>
                                             </button>
-                                            <ul class="dropdown-menu" style="padding: 2px 0px">
-                                                <li><button type="button" class="dropdown-item py-2" onclick="changePriority('Standard')">Standard</button></li>
-                                                <li><button type="button" class="dropdown-item py-2" onclick="changePriority('Important')">Important</button></li>
-                                                <li><button type="button" class="dropdown-item py-2" onclick="changePriority('Urgent')">Urgent</button></li>
+                                            <ul class="dropdown-menu py-0">
+                                                <li><button type="button" class="btn btn-standard dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changePriority('Standard')">Standard</button></li>
+                                                <li><button type="button" class="btn btn-important dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changePriority('Important')">Important</button></li>
+                                                <li><button type="button" class="btn btn-urgent dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changePriority('Urgent')">Urgent</button></li>
                                             </ul>
                                         </div>
                                         <input type="hidden" id="priority{{ $ticket->id }}" name="priority" value="{{ old('priority', $ticket->priority) }}" required>

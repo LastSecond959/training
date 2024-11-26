@@ -139,13 +139,12 @@
                                                         @endforeach
                                                     </ul>
                                                 </div>
-                                                <!-- new handler not submitted -->
                                                 <input type="hidden" id="handler{{ $ticket->id }}" name="handler_id" value="{{ old('handler_id', $ticket->handler_id) }}" required>
                                             </div>
                                         </div>
 
                                         <div class="mt-3">
-                                            <label for="notes{{ $ticket->id }}" class="block text-black font-bold">Notes</label>
+                                            <label for="notes{{ $ticket->id }}" class="block text-black fw-bold">Notes</label>
                                             <textarea name="notes" id="notes{{ $ticket->id }}" class="rounded mt-1 w-full" style="height: 250px;">{{ $ticket->notes }}</textarea>
                                         </div>
 
@@ -183,8 +182,6 @@
                         }
 
                         function changeHandler(handlerId, handlerName) {
-                            console.log(`New Handler ID: ${handlerId}, Name: ${handlerName}`);
-
                             document.getElementById('selectAdmin{{ $ticket->id }}').querySelector('span').textContent = handlerName;
                             document.getElementById('handler{{ $ticket->id }}').value = handlerId;
                             document.getElementById('currentHandler{{ $ticket->id }}').disabled = (handlerId === '{{ $ticket->handler_id }}');

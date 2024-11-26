@@ -23,7 +23,11 @@
         <table class="table table-hover table-bordered align-middle mb-0">
             <thead class="table-dark">
                 <tr>
-                    <th scope="col" class="p-3 text-white" style="width: 10%;">Ticket ID</th>
+                    <th scope="col" class="p-3 text-white" style="width: 10%;">
+                        <button id="sortButton" class="btn p-0 text-white fw-bold border-0 bg-transparent" type="button" onclick="sortTickets()">
+                            Ticket ID &#9650;&#9660;
+                        </button>
+                    </th>
                     <th scope="col" class="p-3 text-white" style="width: 20%;">Title</th>
                     <th scope="col" class="p-3" style="width: 5%;">
                         <div class="dropdown">
@@ -180,7 +184,7 @@
     </div>
 
     <!-- Pagination -->
-    {{ $ticketList->links('vendor.pagination.bootstrap-5') }}
+    {{ $ticketList->appends(['search' => request('search'), 'sort' => request('sort')])->links('vendor.pagination.bootstrap-5') }}
 </div>
 
 <script>
@@ -192,5 +196,34 @@
     }
     searchInput.addEventListener('input', toggleButtonState);
     document.addEventListener('DOMContentLoaded', toggleButtonState);
+    
+    let sortState = 0; // 0 = Default, 1 = Ascending, 2 = Descending
+
+    function sortTickets() {
+        const sortButton = document.getElementById('sortButton');
+        let sortOrder = 'default';
+
+        sortState = (sortState + 1) % 3;
+        console.log(sortState);
+
+        switch (sortState) {
+            case 0:
+                sortButton.innerHTML = 'Ticket ID &#9650;&#9660;';
+                sortOrder = 'default';
+                break;
+            case 1:
+                sortButton.innerHTML = 'Ticket ID &#9650;';
+                sortOrder = 'asc';
+                break;
+            case 2:
+                sortButton.innerHTML = 'Ticket ID &#9660;';
+                sortOrder = 'desc';
+                break;
+        }
+
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set('sort', sortOrder);
+        window.location.href = `${window.location.pathname}?${searchParams.toString()}`;
+    }
 </script>
 @endsection

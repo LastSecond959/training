@@ -19,24 +19,33 @@ class TicketController extends Controller
         }
         
         $search = $request->input('search');
+        $sortOrder = $request->input('sort', 'default');
 
         $sort = Ticket::when($search, function($query, $search) {
             $query->where(function($query) use ($search) {
                 $query->where('title', 'LIKE', "%{$search}%")
                     ->orWhere('id', $search);
             });
-        })->orderByRaw("
-            CASE 
-                WHEN status = 'Open' THEN 1
-                WHEN status = 'On Hold' AND handler_id = ? THEN 2
-                WHEN status = 'In Progress' AND handler_id = ? THEN 3
-                WHEN status = 'On Hold' THEN 4
-                WHEN status = 'In Progress' THEN 5
-                ELSE 6
-            END,
-            FIELD(status, 'Open', 'On Hold', 'In Progress', 'Closed'),
-            FIELD(priority, 'Urgent', 'Important', 'Standard')
-        ", [Auth::id(), Auth::id()]);
+        });
+        
+        if ($sortOrder === 'asc') {
+            $sort->orderBy('id', 'asc');
+        } elseif ($sortOrder === 'desc') {
+            $sort->orderBy('id', 'desc');
+        } else {
+            $sort->orderByRaw("
+                CASE 
+                    WHEN status = 'Open' THEN 1
+                    WHEN status = 'On Hold' AND handler_id = ? THEN 2
+                    WHEN status = 'In Progress' AND handler_id = ? THEN 3
+                    WHEN status = 'On Hold' THEN 4
+                    WHEN status = 'In Progress' THEN 5
+                    ELSE 6
+                END,
+                FIELD(status, 'Open', 'On Hold', 'In Progress', 'Closed'),
+                FIELD(priority, 'Urgent', 'Important', 'Standard')
+            ", [Auth::id(), Auth::id()]);
+        }
 
         if (Auth::user()->role === 'user') {
             $ticketList = $sort->where('requester_id', Auth::id())->paginate(10)->withQueryString();

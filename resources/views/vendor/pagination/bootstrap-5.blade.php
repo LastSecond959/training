@@ -26,34 +26,26 @@
             </ul>
         </div>
 
-        <div class="d-none flex-sm-fill d-sm-flex align-items-sm-start justify-content-sm-between mx-1">
-            <div>
-                <p class="small text-muted mb-0">
-                    <em>
-                        *<span class="fw-semibold">Closed tickets</span> will be hidden after <span class="fw-semibold">14 days</span>
-                    </em>
-                    <br>
-                    <div class="small text-muted mt-3 pt-1">
-                        {!! __('Showing') !!}
-                        <span class="fw-semibold">{{ $paginator->firstItem() }}</span>
-                        {!! __('to') !!}
-                        <span class="fw-semibold">{{ $paginator->lastItem() }}</span>
-                        {!! __('of') !!}
-                        <span class="fw-semibold">{{ $paginator->total() }}</span>
-                        {!! __('results') !!}
+        <div class="d-none flex-sm-fill d-sm-flex align-items-sm-end justify-content-sm-between mx-1">
+            <div class="small text-muted">
+                {!! __('Showing') !!}
+                <span class="fw-semibold">{{ $paginator->firstItem() }}</span>
+                {!! __('to') !!}
+                <span class="fw-semibold">{{ $paginator->lastItem() }}</span>
+                {!! __('of') !!}
+                <span class="fw-semibold">{{ $paginator->total() }}</span>
+                {!! __('results') !!}
 
-                        <span class="fw-semibold">•</span>
+                <span class="fw-semibold">•</span>
 
-                        {!! __('Page') !!}
-                        <span class="fw-semibold">{{ $paginator->currentPage() }}</span>
-                        {!! __('of') !!}
-                        <span class="fw-semibold">{{ $paginator->lastPage() }}</span>
-                    </div>
-                </p>
+                {!! __('Page') !!}
+                <span class="fw-semibold">{{ $paginator->currentPage() }}</span>
+                {!! __('of') !!}
+                <span class="fw-semibold">{{ $paginator->lastPage() }}</span>
             </div>
 
             <div>
-                <ul class="pagination mt-3 mb-0 pt-1">
+                <ul class="pagination mt-3 mb-1">
                     {{-- Previous Page Link --}}
                     @if (!$paginator->onFirstPage())
                         <li class="page-item">

@@ -33,6 +33,7 @@
                 --bs-btn-disabled-border-color: #008000;
             }
             .text-bg-open {
+                cursor: default;
                 background-color: #008000;
                 color: white;
                 padding: 10px 12px;
@@ -55,6 +56,7 @@
                 --bs-btn-disabled-border-color: #ffc107;
             }
             .text-bg-on-hold {
+                cursor: default;
                 background-color: #ffc107;
                 color: black;
                 padding: 10px 12px;
@@ -77,6 +79,7 @@
                 --bs-btn-disabled-border-color: #0000ff;
             }
             .text-bg-in-progress {
+                cursor: default;
                 background-color: #0000ff;
                 color: white;
                 padding: 10px 12px;
@@ -99,6 +102,7 @@
                 --bs-btn-disabled-border-color: #212529;
             }
             .text-bg-closed {
+                cursor: default;
                 background-color: #212529;
                 color: white;
                 padding: 10px 12px;
@@ -122,6 +126,7 @@
                 --bs-btn-disabled-border-color: #15b585;
             }
             .text-bg-standard {
+                cursor: default;
                 background-color: #15b585;
                 color: white;
                 padding: 10px 12px;
@@ -144,6 +149,7 @@
                 --bs-btn-disabled-border-color: #fd7e14;
             }
             .text-bg-important {
+                cursor: default;
                 background-color: #fd7e14;
                 color: white;
                 padding: 10px 12px;
@@ -166,6 +172,7 @@
                 --bs-btn-disabled-border-color: #e5192e;
             }
             .text-bg-urgent {
+                cursor: default;
                 background-color: #e5192e;
                 color: white;
                 padding: 10px 12px;
@@ -206,6 +213,30 @@
                 text-decoration: underline;
             }
             
+            .relativeTime {
+                position: relative;
+                cursor: help;
+            }
+
+            .relativeTime::after {
+                content: attr(data-full-time);
+                position: absolute;
+                background: black;
+                color: white;
+                white-space: nowrap;
+                left: 50%;
+                bottom: 100%;
+                transform: translateX(-50%);
+                padding: 5px 10px;
+                border-radius: 5px;
+                box-shadow: 0 2px 4px #333333;
+                display: none;
+            }
+
+            .relativeTime:hover::after {
+                display: block;
+            }
+
             /* Pagination */
             .pagination {
                 --bs-pagination-color: #198754;

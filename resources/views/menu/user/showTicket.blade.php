@@ -54,19 +54,25 @@
                             <tr>
                                 <th scope="row" style="width: 35%;">Time Created</th>
                                 <td>
-                                    {{ $ticket->created_at->format('d/m/Y') }}<br>{{ $ticket->created_at->format('H:i:s') }}
+                                    <span class="relativeTime" data-full-time="{{ $ticket->created_at->format('d/m/Y • H:i:s') }}">
+                                        {{ $ticket->created_at->diffForHumans() }}
+                                    </span>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row" style="width: 35%;">Last Updated</th>
                                 <td>
-                                    {!! $ticket->updated_at ? $ticket->updated_at->format('d/m/Y') . '<br>' . $ticket->updated_at->format('H:i:s') : '-' !!}
+                                    <span class="relativeTime" data-full-time="{{ $ticket->updated_at ? $ticket->updated_at->format('d/m/Y • H:i:s') : '-' }}">
+                                        {!! $ticket->updated_at ? $ticket->updated_at->diffForHumans() : '-' !!}
+                                    </span>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row" style="width: 35%;">Resolved At</th>
                                 <td>
-                                    {!! $ticket->resolved_at ? $ticket->resolved_at->format('d/m/Y') . '<br>' . $ticket->resolved_at->format('H:i:s') : '-' !!}
+                                    <span class="relativeTime" data-full-time="{{ $ticket->resolved_at ? $ticket->resolved_at->format('d/m/Y • H:i:s') : '-' }}">
+                                        {!! $ticket->resolved_at ? $ticket->resolved_at->diffForHumans() : '-' !!}
+                                    </span>
                                 </td>
                             </tr>
                         </tbody>

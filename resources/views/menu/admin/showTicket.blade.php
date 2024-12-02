@@ -54,19 +54,25 @@
                             <tr>
                                 <th scope="row" style="width: 35%;">Time Created</th>
                                 <td>
-                                    {{ $ticket->created_at->format('d/m/Y') }}<br>{{ $ticket->created_at->format('H:i:s') }}
+                                    <span class="relativeTime" data-full-time="{{ $ticket->created_at->format('d/m/Y • H:i:s') }}">
+                                        {{ $ticket->created_at->diffForHumans() }}
+                                    </span>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row" style="width: 35%;">Last Updated</th>
                                 <td>
-                                    {!! $ticket->updated_at ? $ticket->updated_at->format('d/m/Y') . '<br>' . $ticket->updated_at->format('H:i:s') : '-' !!}
+                                    <span class="relativeTime" data-full-time="{{ $ticket->updated_at ? $ticket->updated_at->format('d/m/Y • H:i:s') : '-' }}">
+                                        {!! $ticket->updated_at ? $ticket->updated_at->diffForHumans() : '-' !!}
+                                    </span>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row" style="width: 35%;">Resolved At</th>
                                 <td>
-                                    {!! $ticket->resolved_at ? $ticket->resolved_at->format('d/m/Y') . '<br>' . $ticket->resolved_at->format('H:i:s') : '-' !!}
+                                    <span class="relativeTime" data-full-time="{{ $ticket->resolved_at ? $ticket->resolved_at->format('d/m/Y • H:i:s') : '-' }}">
+                                        {!! $ticket->resolved_at ? $ticket->resolved_at->diffForHumans() : '-' !!}
+                                    </span>
                                 </td>
                             </tr>
                         </tbody>
@@ -92,73 +98,75 @@
                         @endif
                     </div>
 
-                    <div class="modal fade" id="updateTicketModal{{ $ticket->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-body" style="padding-bottom: 12px;">
-                                    <form method="POST" action="{{ route('ticket.update', $ticket->id) }}">
-                                        @csrf
-                                        @method('PUT')
+                    @if ($ticket->handler_id)
+                        <div class="modal fade" id="updateTicketModal{{ $ticket->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-body" style="padding-bottom: 12px;">
+                                        <form method="POST" action="{{ route('ticket.update', $ticket->id) }}">
+                                            @csrf
+                                            @method('PUT')
 
-                                        <div class="d-flex justify-content-between"> 
-                                            <div class="col-6">
-                                                <label for="status{{ $ticket->id }}" class="block text-black fw-bold">
-                                                    Status<span class="text-red-600">*</span>
-                                                </label>
-                                                <div class="btn-group dropend">
-                                                    <button id="statusDropdown{{ $ticket->id }}" type="button" class="btn btn-{{ strtolower(str_replace(' ', '-', $ticket->status)) }} dropdown-toggle" data-bs-toggle="dropdown" style="width: 150px; padding: 10px 12px;">
-                                                        <span id="statusBtnColor{{ $ticket->id }}" class="fw-bold">{{ $ticket->status }}</span>
-                                                    </button>
-                                                    <ul class="dropdown-menu shadow py-0">
-                                                        <li><button type="button" class="btn btn-in-progress dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changeStatus('In Progress')">In Progress</button></li>
-                                                        <li><button type="button" class="btn btn-on-hold dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changeStatus('On Hold')">On Hold</button></li>
-                                                        <li><button type="button" class="btn btn-closed dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changeStatus('Closed')">Closed</button></li>
-                                                    </ul>
+                                            <div class="d-flex justify-content-between"> 
+                                                <div class="col-6">
+                                                    <label for="status{{ $ticket->id }}" class="block text-black fw-bold">
+                                                        Status<span class="text-red-600">*</span>
+                                                    </label>
+                                                    <div class="btn-group dropend">
+                                                        <button id="statusDropdown{{ $ticket->id }}" type="button" class="btn btn-{{ strtolower(str_replace(' ', '-', $ticket->status)) }} dropdown-toggle" data-bs-toggle="dropdown" style="width: 150px; padding: 10px 12px;">
+                                                            <span id="statusBtnColor{{ $ticket->id }}" class="fw-bold">{{ $ticket->status }}</span>
+                                                        </button>
+                                                        <ul class="dropdown-menu shadow py-0">
+                                                            <li><button type="button" class="btn btn-in-progress dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changeStatus('In Progress'); changeHandler('{{ $ticket->handler_id }}', '{{ $ticket->handler->name }}')">In Progress</button></li>
+                                                            <li><button type="button" class="btn btn-on-hold dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changeStatus('On Hold')">On Hold</button></li>
+                                                            <li><button type="button" class="btn btn-closed dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changeStatus('Closed'); changeHandler('{{ $ticket->handler_id }}', '{{ $ticket->handler->name }}')">Closed</button></li>
+                                                        </ul>
+                                                    </div>
+                                                    <input type="hidden" id="status{{ $ticket->id }}" name="status" value="{{ old('status', $ticket->status) }}" required>
                                                 </div>
-                                                <input type="hidden" id="status{{ $ticket->id }}" name="status" value="{{ old('status', $ticket->status) }}" required>
+
+                                                <div class="col-6">
+                                                    <label for="handler{{ $ticket->id }}" class="block text-black fw-bold">
+                                                        Change handler to:
+                                                    </label>
+                                                    <div class="btn-group dropend">
+                                                        <button id="selectAdmin{{ $ticket->id }}" type="button" class="btn btn-outline-secondary text-wrap dropdown-toggle position-relative" data-bs-toggle="dropdown" style="width: 170px; padding: 10px 12px;" {{ $ticket->status !== 'On Hold' ? 'disabled' : '' }}>
+                                                            <span>{{ $ticket->handler->name }}</span>
+                                                            <span id="changeAdminIndicator{{ $ticket->id }}" class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-secondary rounded-circle" style="display: none;">
+                                                                <span class="visually-hidden">Modified</span>
+                                                            </span>
+                                                        </button>
+                                                        <ul class="dropdown-menu shadow py-0">
+                                                            <li><button type="button" id="currentHandler{{ $ticket->id }}" class="btn btn-outline-secondary dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changeHandler('{{ $ticket->handler_id }}', '{{ $ticket->handler->name }}')" disabled>{{ $ticket->handler->name }}</button></li>
+                                                            <li><hr class="dropdown-divider m-0"></li>
+                                                            @foreach ($adminList as $admin)
+                                                                @if ($admin->id != $ticket->handler_id)
+                                                                    <li><button type="button" class="btn btn-outline-secondary dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changeHandler('{{ $admin->id }}', '{{ $admin->name }}')">{{ $admin->name }}</button></li>
+                                                                @endif
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                    <input type="hidden" id="handler{{ $ticket->id }}" name="handler_id" value="{{ old('handler_id', $ticket->handler_id) }}" required>
+                                                </div>
                                             </div>
 
-                                            <div class="col-6">
-                                                <label for="handler{{ $ticket->id }}" class="block text-black fw-bold">
-                                                    Change handler to:
-                                                </label>
-                                                <div class="btn-group dropend">
-                                                    <button id="selectAdmin{{ $ticket->id }}" type="button" class="btn btn-outline-secondary text-wrap dropdown-toggle position-relative" data-bs-toggle="dropdown" style="width: 170px; padding: 10px 12px;" {{ $ticket->status !== 'On Hold' ? 'disabled' : '' }}>
-                                                        <span>{{ $ticket->handler->name }}</span>
-                                                        <span id="changeAdminIndicator{{ $ticket->id }}" class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-secondary rounded-circle" style="display: none;">
-                                                            <span class="visually-hidden">Modified</span>
-                                                        </span>
-                                                    </button>
-                                                    <ul class="dropdown-menu shadow py-0">
-                                                        <li><button type="button" id="currentHandler{{ $ticket->id }}" class="btn btn-outline-secondary dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changeHandler('{{ $ticket->handler_id }}', '{{ $ticket->handler->name }}')" disabled>{{ $ticket->handler->name }}</button></li>
-                                                        <li><hr class="dropdown-divider m-0"></li>
-                                                        @foreach ($adminList as $admin)
-                                                            @if ($admin->id != $ticket->handler_id)
-                                                                <li><button type="button" class="btn btn-outline-secondary dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changeHandler('{{ $admin->id }}', '{{ $admin->name }}')">{{ $admin->name }}</button></li>
-                                                            @endif
-                                                        @endforeach
-                                                    </ul>
-                                                </div>
-                                                <input type="hidden" id="handler{{ $ticket->id }}" name="handler_id" value="{{ old('handler_id', $ticket->handler_id) }}" required>
+                                            <div class="mt-3">
+                                                <label for="notes{{ $ticket->id }}" class="block text-black fw-bold">Notes</label>
+                                                <textarea name="notes" id="notes{{ $ticket->id }}" class="rounded mt-1 w-full" style="height: 250px;">{{ $ticket->notes }}</textarea>
                                             </div>
-                                        </div>
 
-                                        <div class="mt-3">
-                                            <label for="notes{{ $ticket->id }}" class="block text-black fw-bold">Notes</label>
-                                            <textarea name="notes" id="notes{{ $ticket->id }}" class="rounded mt-1 w-full" style="height: 250px;">{{ $ticket->notes }}</textarea>
-                                        </div>
-
-                                        <hr>
-                                        
-                                        <div class="vstack gap-2 w-full">
-                                            <button type="submit" class="btn btn-success py-2 fw-semibold fs-5">Save Changes</button>
-                                            <button type="button" class="btn btn-secondary py-2 fw-semibold fs-5" data-bs-dismiss="modal">Cancel</button>
-                                        </div>
-                                    </form>
+                                            <hr>
+                                            
+                                            <div class="vstack gap-2 w-full">
+                                                <button type="submit" class="btn btn-success py-2 fw-semibold fs-5">Save Changes</button>
+                                                <button type="button" class="btn btn-secondary py-2 fw-semibold fs-5" data-bs-dismiss="modal">Cancel</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                     <script>
                         function changeStatus(status) {
                             const statusDropdown = document.getElementById('statusDropdown{{ $ticket->id }}');

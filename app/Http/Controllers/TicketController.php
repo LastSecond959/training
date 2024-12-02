@@ -20,6 +20,9 @@ class TicketController extends Controller
         
         $search = $request->input('search');
         $sortOrder = $request->input('sort', 'default');
+        $statusFilters = $request->input('status', []);
+        $priorityFilters = $request->input('priority', []);
+        $assignedToFilters = $request->input('assigned_to', []);
 
         $sort = Ticket::when($search, function($query, $search) {
             $query->where(function($query) use ($search) {
@@ -28,6 +31,23 @@ class TicketController extends Controller
             });
         });
         
+        if (!empty($statusFilters) && !in_array('statusShowAll', $statusFilters)) {
+            $sort->whereIn('status', $statusFilters);
+        }
+
+        if (!empty($priorityFilters) && !in_array('priorityShowAll', $priorityFilters)) {
+            $sort->whereIn('priority', $priorityFilters);
+        }
+
+        if (!empty($assignedToFilters) && !in_array('asgToShowAll', $assignedToFilters)) {
+            if (in_array('asgToMe', $assignedToFilters)) {
+                $sort->where('handler_id', Auth::id());
+            }
+            if (in_array('asgToUnassigned', $assignedToFilters)) {
+                $sort->whereNull('handler_id');
+            }
+        }
+
         if ($sortOrder === 'asc') {
             $sort->orderBy('id', 'asc');
         } elseif ($sortOrder === 'desc') {

@@ -35,9 +35,9 @@
                                 <button class="btn dropdown-toggle p-0 text-white fw-bold border-0 bg-transparent underlineHover" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                                     <span>Status</span>
                                 </button>
-                                <ul class="dropdown-menu shadow-lg" style="padding-left: 12px;">
+                                <ul class="dropdown-menu shadow-lg" id="statusFilter" style="padding-left: 12px;">
                                     <li class="form-check mb-1">
-                                        <input class="form-check-input filter-checkbox" type="checkbox" value="statusShowAll" id="statusShowAll">
+                                        <input class="form-check-input filter-checkbox" type="checkbox" value="ShowAll" id="statusShowAll" checked>
                                         <label class="form-check-label fw-normal" for="statusShowAll">
                                             Show All
                                         </label>
@@ -74,9 +74,9 @@
                                 <button class="btn dropdown-toggle p-0 text-white fw-bold border-0 bg-transparent underlineHover" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                                     <span>Priority</span>
                                 </button>
-                                <ul class="dropdown-menu shadow-lg" style="padding-left: 12px;">
+                                <ul class="dropdown-menu shadow-lg" id="priorityFilter" style="padding-left: 12px;">
                                     <li class="form-check mb-1">
-                                        <input class="form-check-input filter-checkbox" type="checkbox" value="priorityShowAll" id="priorityShowAll">
+                                        <input class="form-check-input filter-checkbox" type="checkbox" value="ShowAll" id="priorityShowAll" checked>
                                         <label class="form-check-label fw-normal" for="priorityShowAll">
                                             Show All
                                         </label>
@@ -108,9 +108,9 @@
                                     <button class="btn dropdown-toggle p-0 text-white fw-bold border-0 bg-transparent underlineHover" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                                         <span>Assigned To</span>
                                     </button>
-                                    <ul class="dropdown-menu shadow-lg" style="width: 11rem; padding-left: 12px;">
+                                    <ul class="dropdown-menu shadow-lg" id="asgToFilter" style="width: 11rem; padding-left: 12px;">
                                         <li class="form-check mb-1">
-                                            <input class="form-check-input filter-checkbox" type="checkbox" value="asgToShowAll" id="asgToShowAll">
+                                            <input class="form-check-input filter-checkbox" type="checkbox" value="ShowAll" id="asgToShowAll" checked>
                                             <label class="form-check-label fw-normal" for="asgToShowAll">
                                                 Show All
                                             </label>
@@ -229,6 +229,7 @@
 
         const searchParams = new URLSearchParams(window.location.search);
         searchParams.set('sort', sortOrder);
+        // history.pushState({}, '', `${window.location.pathname}?${searchParams.toString()}`);
         window.location.href = `${window.location.pathname}?${searchParams.toString()}`;
     }
 
@@ -242,38 +243,45 @@
         sortButton.innerHTML = buttonTexts[sortState];
     }
 
-    // Filter
+    function getCheckedValues(groupID) {
+        return Array.from(document.querySelectorAll(`#${groupID} input:checked`)).map(input => input.value);
+    }
+
     function applyFilters() {
-        const status = Array.from(document.querySelectorAll(".dropdown-menu #status input:checked"))
-            .map(input => input.value);
-        const priority = Array.from(document.querySelectorAll(".dropdown-menu #priority input:checked"))
-            .map(input => input.value);
-        const assignedTo = Array.from(document.querySelectorAll(".dropdown-menu #assignedTo input:checked"))
-            .map(input => input.value);
-
-        // Remove "Show All" values from each filter
-        const filteredStatus = status.filter(value => value !== "statusShowAll");
-        const filteredPriority = priority.filter(value => value !== "priorityShowAll");
-        const filteredAssignedTo = assignedTo.filter(value => value !== "asgToShowAll");
-
+        const status = getCheckedValues('statusFilter').filter(value => value !== 'ShowAll');
+        const priority = getCheckedValues('priorityFilter').filter(value => value !== 'ShowAll');
+        const assignedTo = getCheckedValues('asgToFilter').filter(value => value !== 'ShowAll');
         const url = new URL(window.location.href);
 
-        // Only apply filter if it's not "Show All"
-        if (filteredStatus.length > 0) {
-            url.searchParams.set('status', filteredStatus.join(","));
+        if (status.length > 0) {
+            url.searchParams.set('status', status.join(","));
         }
-        if (filteredPriority.length > 0) {
-            url.searchParams.set('priority', filteredPriority.join(","));
+        if (priority.length > 0) {
+            url.searchParams.set('priority', priority.join(","));
         }
-        if (filteredAssignedTo.length > 0) {
-            url.searchParams.set('assigned_to', filteredAssignedTo.join(","));
+        if (assignedTo.length > 0) {
+            url.searchParams.set('assigned_to', assignedTo.join(","));
         }
-
-        // Reload the page with updated filters
         window.location.href = url.toString();
     }
 
-    // Add event listeners to checkboxes to apply filters
+    function handleShowAllChange(event, filterID) {
+        const allCheckboxes = document.querySelectorAll(`#${filterID} input[type='checkbox']`);
+        if (event.target.checked) {
+            allCheckboxes.forEach(cb => cb.checked = false); // Uncheck all others
+            event.target.checked = true; // Keep "Show All" checked
+        }
+    }
+
+    document.querySelectorAll('.filter-checkbox').forEach(input => {
+        if (input.value === 'ShowAll') {
+            input.addEventListener('change', function() {
+                const filterID = input.closest('ul').id; // Get the filter group id (statusFilter, priorityFilter, asgToFilter)
+                handleShowAllChange(event, filterID);
+            });
+        }
+    });
+
     document.querySelectorAll(".filter-checkbox").forEach(input => {
         input.addEventListener("change", applyFilters);
     });

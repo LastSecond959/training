@@ -20,40 +20,40 @@ class TicketController extends Controller
         
         $search = $request->input('search');
         $sortOrder = $request->input('sort', 'default');
-        $statusFilters = $request->input('status', []);
-        $priorityFilters = $request->input('priority', []);
-        $assignedToFilters = $request->input('assigned_to', []);
+        $statusFilters = (array) $request->input('status', []);
+        $priorityFilters = (array) $request->input('priority', []);
+        $assignedToFilters = (array) $request->input('assigned_to', []);
 
-        $sort = Ticket::when($search, function($query, $search) {
-            $query->where(function($query) use ($search) {
-                $query->where('title', 'LIKE', "%{$search}%")
+        $query = Ticket::when($search, function($q, $search) {
+            $q->where(function($q) use ($search) {
+                $q->where('title', 'LIKE', "%{$search}%")
                     ->orWhere('id', $search);
             });
         });
         
-        if (!empty($statusFilters) && !in_array('statusShowAll', $statusFilters)) {
-            $sort->whereIn('status', $statusFilters);
+        if (!empty($statusFilters)) {
+            $query->whereIn('status', $statusFilters);
         }
 
-        if (!empty($priorityFilters) && !in_array('priorityShowAll', $priorityFilters)) {
-            $sort->whereIn('priority', $priorityFilters);
+        if (!empty($priorityFilters)) {
+            $query->whereIn('priority', $priorityFilters);
         }
 
-        if (!empty($assignedToFilters) && !in_array('asgToShowAll', $assignedToFilters)) {
+        if (!empty($assignedToFilters)) {
             if (in_array('asgToMe', $assignedToFilters)) {
-                $sort->where('handler_id', Auth::id());
+                $query->where('handler_id', Auth::id());
             }
             if (in_array('asgToUnassigned', $assignedToFilters)) {
-                $sort->whereNull('handler_id');
+                $query->whereNull('handler_id');
             }
         }
 
         if ($sortOrder === 'asc') {
-            $sort->orderBy('id', 'asc');
+            $query->orderBy('id', 'asc');
         } elseif ($sortOrder === 'desc') {
-            $sort->orderBy('id', 'desc');
+            $query->orderBy('id', 'desc');
         } else {
-            $sort->orderByRaw("
+            $query->orderByRaw("
                 CASE 
                     WHEN status = 'Open' THEN 1
                     WHEN status = 'On Hold' AND handler_id = ? THEN 2
@@ -68,10 +68,9 @@ class TicketController extends Controller
         }
 
         if (Auth::user()->role === 'user') {
-            $ticketList = $sort->where('requester_id', Auth::id())->paginate(10)->withQueryString();
-        } elseif (Auth::user()->role === 'admin') {
-            $ticketList = $sort->paginate(10)->withQueryString();
+            $query->where('requester_id', Auth::id());
         }
+        $ticketList = $query->paginate(10)->withQueryString();
         
         return view('layouts.dashboard', compact('ticketList'));
     }

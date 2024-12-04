@@ -71,6 +71,10 @@ class TicketController extends Controller
             $query->where('requester_id', Auth::id());
         }
         $ticketList = $query->paginate(10)->withQueryString();
+
+        if ($request->ajax()) {
+            return view('partials.ticketTable', compact('ticketList'))->render();
+        }
         
         return view('layouts.dashboard', compact('ticketList'));
     }

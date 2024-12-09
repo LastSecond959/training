@@ -3,11 +3,12 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\PreventBackHistory;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 Route::middleware('guest')->group(function () {
-    Route::view('/', 'menu.welcome')->name('welcome')->with('alert', 'You are already logged in');
+    Route::view('/', 'menu.welcome')->name('welcome');
 });
 
 Route::middleware(['auth', PreventBackHistory::class])->group(function () {

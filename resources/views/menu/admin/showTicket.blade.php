@@ -52,7 +52,7 @@
                                 <td class="text-break">{{ $ticket->notes ? $ticket->notes : '-' }}</td>
                             </tr>
                             <tr>
-                                <th scope="row" style="width: 35%;">Time Created</th>
+                                <th scope="row" style="width: 35%;">Created</th>
                                 <td>
                                     <span class="relativeTime" data-full-time="{{ $ticket->created_at->format('d/m/Y • H:i:s') }}">
                                         {{ $ticket->created_at->diffForHumans() }}
@@ -60,7 +60,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row" style="width: 35%;">Last Updated</th>
+                                <th scope="row" style="width: 35%;">Updated</th>
                                 <td>
                                     <span class="relativeTime" data-full-time="{{ $ticket->updated_at ? $ticket->updated_at->format('d/m/Y • H:i:s') : '-' }}">
                                         {!! $ticket->updated_at ? $ticket->updated_at->diffForHumans() : '-' !!}
@@ -68,7 +68,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row" style="width: 35%;">Resolved At</th>
+                                <th scope="row" style="width: 35%;">Resolved</th>
                                 <td>
                                     <span class="relativeTime" data-full-time="{{ $ticket->resolved_at ? $ticket->resolved_at->format('d/m/Y • H:i:s') : '-' }}">
                                         {!! $ticket->resolved_at ? $ticket->resolved_at->diffForHumans() : '-' !!}

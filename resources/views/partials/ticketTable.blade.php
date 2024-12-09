@@ -110,9 +110,9 @@
                     Assigned To
                 @endif
             </th>
-            <th scope="col" class="p-3 text-white" style="width: 10%;">Created At</th>
-            <th scope="col" class="p-3 text-white" style="width: 10%;">Updated At</th>
-            <th scope="col" class="p-3 text-white" style="width: 10%;">Resolved At</th>
+            <th scope="col" class="p-3 text-white" style="width: 10%;">Created</th>
+            <th scope="col" class="p-3 text-white" style="width: 10%;">Updated</th>
+            <th scope="col" class="p-3 text-white" style="width: 10%;">Resolved</th>
         </tr>
     </thead>
 
@@ -160,7 +160,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="8" class="text-center">No tickets have been made.</td>
+                <td colspan="8" class="text-center">No tickets have been created.</td>
             </tr>
         @endforelse
     </tbody>

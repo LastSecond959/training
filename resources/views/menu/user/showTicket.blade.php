@@ -116,7 +116,7 @@
                                             <button id="priorityDropdown{{ $ticket->id }}" type="button" class="btn btn-{{ lcfirst($ticket->priority) }} dropdown-toggle" data-bs-toggle="dropdown" style="width: 150px; padding: 10px 12px;">
                                                 <span class="text-white fw-bold">{{ $ticket->priority }}</span>
                                             </button>
-                                            <ul class="dropdown-menu py-0">
+                                            <ul class="dropdown-menu shadow py-0">
                                                 <li><button type="button" class="btn btn-standard dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changePriority('Standard')">Standard</button></li>
                                                 <li><button type="button" class="btn btn-important dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changePriority('Important')">Important</button></li>
                                                 <li><button type="button" class="btn btn-urgent dropdown-item rounded-1" style="padding: 10px 12px;" onclick="changePriority('Urgent')">Urgent</button></li>

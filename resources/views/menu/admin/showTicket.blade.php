@@ -91,7 +91,7 @@
                                 @csrf
                                 @method('PATCH')
 
-                                <button type="submit" class="btn btn-dark fw-bold fs-5 py-2">
+                                <button type="button" class="btn btn-dark fw-bold fs-5 py-2" onclick="handleTicket('{{ $ticket->id }}')">
                                     Handle Ticket
                                 </button>
                             </form>
@@ -158,7 +158,7 @@
                                             <hr>
                                             
                                             <div class="vstack gap-2 w-full">
-                                                <button type="submit" class="btn btn-success py-2 fw-semibold fs-5">Save Changes</button>
+                                                <button type="button" class="btn btn-success py-2 fw-semibold fs-5" onclick="updateTicket('{{ $ticket->id }}')">Save Changes</button>
                                                 <button type="button" class="btn btn-secondary py-2 fw-semibold fs-5" data-bs-dismiss="modal">Cancel</button>
                                             </div>
                                         </form>
@@ -168,6 +168,30 @@
                         </div>
                     @endif
                     <script>
+                        function handleTicket(ticketId) {
+                            fetch(`/ticket/${ticketId}`, {
+                                method: 'PATCH',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                },
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Failed to handle the ticket.');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                console.log('Ticket handled:', data.message);
+                                window.location.reload();
+                            })
+                            .catch(error => {
+                                console.error(error);
+                                alert('An error occurred while handling the ticket.');
+                            });
+                        }
+
                         function changeStatus(status) {
                             const statusDropdown = document.getElementById('statusDropdown{{ $ticket->id }}');
                             
@@ -196,20 +220,44 @@
                             document.getElementById('changeAdminIndicator{{ $ticket->id }}').style.display = (handlerId !== '{{ $ticket->handler_id }}') ? 'block' : 'none';
                         }
 
-                        // function handleTicket(ticketId) {
-                        //     fetch(`/ticket/${ticketId}`, {
-                        //         method: 'PATCH',
-                        //         headers: {
-                        //             'Content-Type': 'application/json',
-                        //             'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        //         },
-                        //         body: JSON.stringify({
-                        //             handler_id: {{ Auth::id() }},
-                        //             status: 'In Progress'
-                        //         })
-                        //     })
-                        //     .then(response => response.ok ? location.reload() : alert('Error updating ticket'));
-                        // }
+                        function updateTicket(ticketId) {
+                            const payload = {
+                                status: document.getElementById(`status${ticketId}`).value,
+                                handler_id: document.getElementById(`handler${ticketId}`).value,
+                                notes: document.getElementById(`notes${ticketId}`).value,
+                            };
+                            
+                            fetch(`/ticket/${ticketId}`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                },
+                                body: JSON.stringify(payload),
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Failed to update the ticket.');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                console.log('Ticket updated:', data.message);
+                                
+                                const modalElement = document.getElementById(`updateTicketModal${ticketId}`);
+                                console.log(modalElement);
+                                const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+                                console.log(modal);
+
+                                modal.hide();
+                                
+                                alert('Ticket updated successfully.');
+                            })
+                            .catch(error => {
+                                console.error(error);
+                                alert('An error occurred while updating the ticket.');
+                            });
+                        }
                     </script>
                 @endif
             </div>

@@ -177,7 +177,7 @@ class TicketController extends Controller
 
         }
 
-        return redirect()->route('ticket.show', $ticket->id);
+        return response()->json(['message' => 'Ticket updated successfully'], 200);
     }
 
     public function handle($id)
@@ -188,7 +188,7 @@ class TicketController extends Controller
         
         $ticket->save();
         
-        return redirect()->route('ticket.show', $ticket->id);
+        return response()->json(['message' => 'Ticket handled successfully'], 200);
     }
 
     /**

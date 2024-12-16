@@ -1,7 +1,7 @@
 import "./bootstrap";
+import "./bootstrap.bundle.min.js";
 
-import "bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
+import "../css/bootstrap.min.css";
 
 import Alpine from "alpinejs";
 

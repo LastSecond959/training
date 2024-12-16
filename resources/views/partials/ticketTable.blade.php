@@ -1,6 +1,6 @@
 <table class="table table-hover table-bordered align-middle mb-0">
     <thead class="table-dark">
-        <tr>
+        <tr style="position: sticky; top: 0; z-index: 1;">
             <th scope="col" class="p-3 text-white" style="width: 10%;">
                 <button id="sortButton" class="btn p-0 text-white fw-bold border-0 bg-transparent" type="button" onclick="sortTickets()">
                     Ticket ID &#9650;&#9660;
@@ -118,7 +118,7 @@
 
     <tbody id="ticketTableBody">
         @forelse ($ticketList as $ticket)
-            <tr>
+            <tr style="z-index: 0;">
                 <th scope="row" style="padding: 13px 16px;">
                     <a href="{{ route('ticket.show', $ticket->id) }}">#{{ $ticket->id }}</a>
                 </th>

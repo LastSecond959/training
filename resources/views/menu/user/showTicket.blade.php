@@ -128,8 +128,8 @@
                                             function changePriority(priority) {
                                                 document.getElementById('priorityDropdown{{ $ticket->id }}').querySelector('span').textContent = priority;
                                                 document.getElementById('priority{{ $ticket->id }}').value = priority;
-                                                document.getElementById('priorityDropdown{{ $ticket->id }}').classList.remove('bg-standard', 'bg-important', 'bg-urgent');
-                                                document.getElementById('priorityDropdown{{ $ticket->id }}').classList.add('bg-' + priority.toLowerCase());
+                                                document.getElementById('priorityDropdown{{ $ticket->id }}').classList.remove('btn-standard', 'btn-important', 'btn-urgent');
+                                                document.getElementById('priorityDropdown{{ $ticket->id }}').classList.add('btn-' + priority.toLowerCase());
                                             }
                                         </script>
                                         

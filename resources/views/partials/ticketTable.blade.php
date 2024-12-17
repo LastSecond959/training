@@ -1,6 +1,6 @@
 <table class="table table-hover table-bordered align-middle mb-0">
     <thead class="table-dark">
-        <tr style="position: sticky; top: 0; z-index: 1;">
+        <tr>
             <th scope="col" class="p-3 text-white" style="width: 10%;">
                 <button id="sortButton" class="btn p-0 text-white fw-bold border-0 bg-transparent" type="button" onclick="sortTickets()">
                     Ticket ID &#9650;&#9660;
@@ -20,19 +20,19 @@
                             </label>
                         </li>
                         <li class="form-check mb-1">
-                            <input class="form-check-input filter-checkbox" type="checkbox" value="statusOpen" id="statusOpen">
+                            <input class="form-check-input filter-checkbox" type="checkbox" value="Open" id="statusOpen">
                             <label class="form-check-label fw-normal" for="statusOpen">
                                 Open
                             </label>
                         </li>
                         <li class="form-check mb-1">
-                            <input class="form-check-input filter-checkbox" type="checkbox" value="statusOnHold" id="statusOnHold">
+                            <input class="form-check-input filter-checkbox" type="checkbox" value="On Hold" id="statusOnHold">
                             <label class="form-check-label fw-normal" for="statusOnHold">
                                 On Hold
                             </label>
                         </li>
                         <li class="form-check mb-1">
-                            <input class="form-check-input filter-checkbox" type="checkbox" value="statusInProgress" id="statusInProgress">
+                            <input class="form-check-input filter-checkbox" type="checkbox" value="In Progress" id="statusInProgress">
                             <label class="form-check-label fw-normal" for="statusInProgress">
                                 In Progress
                             </label>
@@ -118,7 +118,7 @@
 
     <tbody id="ticketTableBody">
         @forelse ($ticketList as $ticket)
-            <tr style="z-index: 0;">
+            <tr>
                 <th scope="row" style="padding: 13px 16px;">
                     <a href="{{ route('ticket.show', $ticket->id) }}">#{{ $ticket->id }}</a>
                 </th>

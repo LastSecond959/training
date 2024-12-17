@@ -29,7 +29,8 @@
     </div>
 
     <!-- Pagination -->
-    {{ $ticketList->appends(['search' => request('search'), 'sort' => request('sort')])->links('vendor.pagination.bootstrap-5') }}
+    <!-- {{ $ticketList->appends(['search' => request('search'), 'sort' => request('sort')])->links('vendor.pagination.bootstrap-5') }} -->
+    {{ $ticketList->appends(request()->except('page'))->links('vendor.pagination.bootstrap-5') }}
 </div>
 
 <script>
@@ -47,12 +48,27 @@
     let sortState = 0; // 0 = Default, 1 = Ascending, 2 = Descending
     const sortOrders = ['default', 'asc', 'desc'];
 
+    document.addEventListener("DOMContentLoaded", () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const page = urlParams.get('page');
+        const sort = urlParams.get('sort');
+
+        if (!sort || !page) {
+            const newUrlParams = new URLSearchParams();
+            newUrlParams.set('page', page || '1');
+            newUrlParams.set('sort', sort || 'default');
+
+            history.replaceState({}, '', `${window.location.pathname}?${newUrlParams.toString()}`);
+        }
+    });
+
     window.onload = function () {
         const urlParams = new URLSearchParams(window.location.search);
-        const sortOrder = urlParams.get('sort') || 'default';
+        const sortOrder = urlParams.get('sort');
         sortState = sortOrders.indexOf(sortOrder);
 
         updateButtonText();
+        fetchSortedTickets(sortOrder);
     };
 
     function sortTickets() {

@@ -216,7 +216,6 @@
                 position: relative;
                 cursor: help;
             }
-
             .relativeTime::after {
                 content: attr(data-full-time);
                 position: absolute;
@@ -231,7 +230,6 @@
                 box-shadow: 0 2px 4px #333333;
                 display: none;
             }
-
             .relativeTime:hover::after {
                 display: block;
             }

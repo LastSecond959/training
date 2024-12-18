@@ -70,10 +70,10 @@ class TicketController extends Controller
         if (Auth::user()->role === 'user') {
             $query->where('requester_id', Auth::id());
         }
-        $ticketList = $query->paginate(2)->withQueryString();
+        $ticketList = $query->paginate(10)->withQueryString();
 
         if ($request->ajax()) {
-            return view('partials.ticketTable', compact('ticketList'))->render();
+            return view('partials.ticketTableBody', compact('ticketList'))->render();
         }
         
         return view('layouts.dashboard', compact('ticketList'));

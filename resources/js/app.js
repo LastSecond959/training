@@ -1,3 +1,4 @@
+import "bootstrap";
 import "./bootstrap";
 import "./bootstrap.bundle.min.js";
 

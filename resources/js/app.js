@@ -1,8 +1,4 @@
-import "bootstrap";
-import "./bootstrap";
-import "./bootstrap.bundle.min.js";
-
-import "../css/bootstrap.min.css";
+import "./axios-setup.js";
 
 import Alpine from "alpinejs";
 

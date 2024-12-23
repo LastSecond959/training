@@ -109,7 +109,7 @@
 
                                             <div class="d-flex justify-content-between"> 
                                                 <div class="col-6">
-                                                    <label for="status{{ $ticket->id }}" class="block text-black fw-bold">
+                                                    <label for="statusDropdown{{ $ticket->id }}" class="block text-black fw-bold">
                                                         Status<span class="text-red-600">*</span>
                                                     </label>
                                                     <div class="btn-group dropend">
@@ -126,7 +126,7 @@
                                                 </div>
 
                                                 <div class="col-6">
-                                                    <label for="handler{{ $ticket->id }}" class="block text-black fw-bold">
+                                                    <label for="selectAdmin{{ $ticket->id }}" class="block text-black fw-bold">
                                                         Change handler to:
                                                     </label>
                                                     <div class="btn-group dropend">
@@ -245,9 +245,7 @@
                                 console.log('Ticket updated:', data.message);
                                 
                                 const modalElement = document.getElementById(`updateTicketModal${ticketId}`);
-                                console.log(modalElement);
                                 const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
-                                console.log(modal);
 
                                 modal.hide();
                                 

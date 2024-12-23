@@ -25,17 +25,17 @@
                 @endif
             </td>
             <td style="padding: 13px 16px;">
-                <span class="relativeTime" data-bs-toggle="tooltip" data-bs-title="{{ $ticket->created_at->format('d/m/Y • H:i:s') }}">
+                <span data-bs-toggle="tooltip" data-bs-title="{{ $ticket->created_at->format('d/m/Y • H:i:s') }}" data-bs-animation="false" style="cursor: help;">
                     {{ $ticket->created_at->diffForHumans() }}
                 </span>
             </td>
             <td style="padding: 13px 16px;">
-                <span class="relativeTime" data-full-time="{{ $ticket->updated_at ? $ticket->updated_at->format('d/m/Y • H:i:s') : '-' }}">
+                <span data-bs-toggle="tooltip" data-bs-title="{{ $ticket->updated_at ? $ticket->updated_at->format('d/m/Y • H:i:s') : '-' }}" data-bs-animation="false" style="cursor: help;">
                     {!! $ticket->updated_at ? $ticket->updated_at->diffForHumans() : '-' !!}
                 </span>
             </td>
             <td style="padding: 13px 16px;">
-                <span class="relativeTime" data-full-time="{{ $ticket->resolved_at ? $ticket->resolved_at->format('d/m/Y • H:i:s') : '-' }}">
+                <span data-bs-toggle="tooltip" data-bs-title="{{ $ticket->resolved_at ? $ticket->resolved_at->format('d/m/Y • H:i:s') : '-' }}" data-bs-animation="false" style="cursor: help;">
                     {!! $ticket->resolved_at ? $ticket->resolved_at->diffForHumans() : '-' !!}
                 </span>
             </td>

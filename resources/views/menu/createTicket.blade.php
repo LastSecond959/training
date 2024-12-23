@@ -26,7 +26,7 @@
         </div>
 
         <!-- Priority Field -->
-        <label for="priority" class="block text-black fw-bold">
+        <label for="priorityDropdown" class="block text-black fw-bold">
             Priority<span class="text-red-600">*</span>
         </label>
         <div class="btn-group dropend mb-5">
@@ -40,6 +40,7 @@
             </ul>
         </div>
         <input type="hidden" id="priority" name="priority" value="{{ old('priority') }}" required>
+        <div id="priorityFeedback" class="invalid-feedback">Please select a priority.</div>
 
         <!-- Submit Button -->
         <div class="d-grid mt-5">
@@ -50,10 +51,18 @@
         
         <script>
             function changePriority(priority) {
-                document.getElementById('priorityDropdown').querySelector('span').textContent = priority;
-                document.getElementById('priority').value = priority;
-                document.getElementById('priorityDropdown').classList.remove('btn-secondary', 'btn-standard', 'btn-important', 'btn-urgent');
-                document.getElementById('priorityDropdown').classList.add('btn-' + priority.toLowerCase());
+                const priorityDropdown = document.getElementById('priorityDropdown');
+                const priorityInput = document.getElementById('priority');
+                const priorityFeedback = document.getElementById('priorityFeedback');
+
+                priorityDropdown.querySelector('span').textContent = priority;
+                priorityInput.value = priority;
+                
+                priorityDropdown.classList.remove('btn-secondary', 'btn-standard', 'btn-important', 'btn-urgent');
+                priorityDropdown.classList.add('btn-' + priority.toLowerCase());
+                
+                priorityFeedback.classList.remove('invalid-feedback');
+                priorityFeedback.classList.add('valid-feedback');
             }
         </script>
     </form>

@@ -10,7 +10,7 @@
         <!-- Search bar -->
         <form method="GET" action="{{ route('dashboard') }}" class="d-flex align-self-end">
             <div class="input-group w-auto">
-                <input class="form-control" type="search" name="search" placeholder="Search by title or id" value="{{ request()->input('search') }}" id="searchInput" required>
+                <input class="form-control" type="search" name="search" placeholder="Search by id or title" value="{{ request()->input('search') }}" id="searchInput" required>
                 <button class="input-group-text btn btn-success" type="submit" id="searchButton" disabled>
                     <img src="{{ asset('images/search.svg') }}" alt="Search Icon" style="width: 18px; height: 18px; filter: invert(1);">
                 </button>
@@ -22,8 +22,8 @@
     <div class="d-flex flex-column" style="height: 730px;">
         <div class="table-responsive rounded-2">
             <table class="table table-hover table-bordered align-middle mb-0">
-                @include('partials.ticketTableHeader')
-                @include('partials.ticketTableBody')
+                @include('partials.ticketListHeader')
+                @include('partials.ticketListBody')
             </table>
         </div>
         <em class="small text-muted ms-1 mb-0">
@@ -114,8 +114,8 @@
         .then(html => {
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
-            const newTable = doc.querySelector('#ticketTableBody');
-            document.querySelector('#ticketTableBody').innerHTML = newTable.innerHTML;
+            const newTable = doc.querySelector('#ticketListBody');
+            document.querySelector('#ticketListBody').innerHTML = newTable.innerHTML;
         })
         .catch(error => console.error('Error fetching sorted tickets:', error));
     }

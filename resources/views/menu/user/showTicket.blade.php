@@ -6,78 +6,14 @@
     <div class="container px-5 py-5">
         <div class="row d-flex justify-content-around">
             <div class="col-7">
-                <h3 class="pt-2 m-0">{{ $ticket->title }}</h3>
+                <h3 class="pt-2 m-0 text-break">{{ $ticket->title }}</h3>
                 <p><em>- {{ $ticket->requester->name }}, {{ $ticket->requester->department }}</em></p>
                 <hr style="border-bottom: 2px solid black;">
                 <p class="text-break pt-3 fs-5">{{ $ticket->description }}</p>
             </div>
             <div class="col-1"></div>
             <div class="col-4">
-                <div class="table-responsive rounded-2">
-                    <table class="table table-bordered border-dark align-middle">
-                        <thead class="table-dark">
-                            <tr>
-                                <th class="text-center fs-5" colspan="2">Ticket Information</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-group-divider">
-                            <tr>
-                                <th scope="row" style="width: 35%;">Ticket ID</th>
-                                <td class="fs-5">#{{ $ticket->id }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row" style="width: 35%;">Status</th>
-                                <td class="fs-5">
-                                    <span class="badge text-bg-{{ strtolower(str_replace(' ', '-', $ticket->status)) }}">{{ $ticket->status }}</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" style="width: 35%;">Priority</th>
-                                <td class="fs-5">
-                                    <span class="badge text-bg-{{ lcfirst($ticket->priority) }}">{{ $ticket->priority }}</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" style="width: 35%;">Assigned To</th>
-                                <td>
-                                    @if ($ticket->handler_id)
-                                        {{ $ticket->handler->name }}
-                                    @else
-                                        <span class="text-red-600 fw-semibold">Unassigned</span>
-                                    @endif
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" style="width: 35%;">Notes</th>
-                                <td class="text-break">{{ $ticket->notes ? $ticket->notes : '-' }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row" style="width: 35%;">Created</th>
-                                <td>
-                                    <span class="relativeTime" data-full-time="{{ $ticket->created_at->format('d/m/Y • H:i:s') }}">
-                                        {{ $ticket->created_at->diffForHumans() }}
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" style="width: 35%;">Updated</th>
-                                <td>
-                                    <span class="relativeTime" data-full-time="{{ $ticket->updated_at ? $ticket->updated_at->format('d/m/Y • H:i:s') : '-' }}">
-                                        {!! $ticket->updated_at ? $ticket->updated_at->diffForHumans() : '-' !!}
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" style="width: 35%;">Resolved</th>
-                                <td>
-                                    <span class="relativeTime" data-full-time="{{ $ticket->resolved_at ? $ticket->resolved_at->format('d/m/Y • H:i:s') : '-' }}">
-                                        {!! $ticket->resolved_at ? $ticket->resolved_at->diffForHumans() : '-' !!}
-                                    </span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                @include('partials.ticketInfoTable')
 
                 <!-- Edit/Update Ticket -->
                 @if ($ticket->status != 'Closed')
@@ -124,15 +60,6 @@
                                         </div>
                                         <input type="hidden" id="priority{{ $ticket->id }}" name="priority" value="{{ old('priority', $ticket->priority) }}" required>
                                         
-                                        <script>
-                                            function changePriority(priority) {
-                                                document.getElementById('priorityDropdown{{ $ticket->id }}').querySelector('span').textContent = priority;
-                                                document.getElementById('priority{{ $ticket->id }}').value = priority;
-                                                document.getElementById('priorityDropdown{{ $ticket->id }}').classList.remove('btn-standard', 'btn-important', 'btn-urgent');
-                                                document.getElementById('priorityDropdown{{ $ticket->id }}').classList.add('btn-' + priority.toLowerCase());
-                                            }
-                                        </script>
-                                        
                                         <hr class="mt-5">
 
                                         <div class="vstack gap-2 w-full">
@@ -144,6 +71,55 @@
                             </div>
                         </div>
                     </div>
+                    <script>
+                        // Tooltips
+                        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+                        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+                        
+                        function changePriority(priority) {
+                            document.getElementById('priorityDropdown{{ $ticket->id }}').querySelector('span').textContent = priority;
+                            document.getElementById('priority{{ $ticket->id }}').value = priority;
+                            document.getElementById('priorityDropdown{{ $ticket->id }}').classList.remove('btn-standard', 'btn-important', 'btn-urgent');
+                            document.getElementById('priorityDropdown{{ $ticket->id }}').classList.add('btn-' + priority.toLowerCase());
+                        }
+
+                        function editTicket(ticketId) {
+                            const payload = {
+                                status: document.getElementById(`status${ticketId}`).value,
+                                handler_id: document.getElementById(`handler${ticketId}`).value,
+                                notes: document.getElementById(`notes${ticketId}`).value,
+                            };
+                            
+                            fetch(`/ticket/${ticketId}`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                },
+                                body: JSON.stringify(payload),
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Failed to update the ticket.');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                console.log('Ticket updated:', data.message);
+                                
+                                const modalElement = document.getElementById(`editTicketModal${ticketId}`);
+                                const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+                                modal.hide();
+                                
+                                alert('Ticket updated successfully.');
+                                location.reload();
+                            })
+                            .catch(error => {
+                                console.error(error);
+                                alert('An error occurred while updating the ticket.');
+                            });
+                        }
+                    </script>
                 @endif
             </div>
         </div>

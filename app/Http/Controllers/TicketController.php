@@ -121,7 +121,7 @@ class TicketController extends Controller
         $ticket = Ticket::findOrFail($id);
         $adminList = User::where('role', 'admin')->get();
 
-        if ($ticket->requester_id === Auth::id()) {
+        if ($ticket->requester_id === Auth::id() && Auth::user()->role === 'user') {
             return view('menu.user.showTicket', compact('ticket'));
         } elseif (Auth::user()->role === 'admin') {
             return view('menu.admin.showTicket', compact('ticket', 'adminList'));

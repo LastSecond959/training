@@ -6,87 +6,19 @@
     <div class="container px-5 py-5">
         <div class="row d-flex justify-content-around">
             <div class="col-7">
-                <h3 class="pt-2 m-0">{{ $ticket->title }}</h3>
+                <h3 class="pt-2 m-0 text-break">{{ $ticket->title }}</h3>
                 <p><em>- {{ $ticket->requester->name }}, {{ $ticket->requester->department }}</em></p>
                 <hr style="border-bottom: 2px solid black;">
                 <p class="text-break pt-3 fs-5">{{ $ticket->description }}</p>
             </div>
             <div class="col-1"></div>
             <div class="col-4">
-                <div class="table-responsive rounded-2">
-                    <table class="table table-bordered border-dark align-middle">
-                        <thead class="table-dark">
-                            <tr>
-                                <th class="text-center fs-5" colspan="2">Ticket Information</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-group-divider">
-                            <tr>
-                                <th scope="row" style="width: 35%;">Ticket ID</th>
-                                <td class="fs-5">#{{ $ticket->id }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row" style="width: 35%;">Status</th>
-                                <td class="fs-5">
-                                    <span class="badge text-bg-{{ strtolower(str_replace(' ', '-', $ticket->status)) }}">{{ $ticket->status }}</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" style="width: 35%;">Priority</th>
-                                <td class="fs-5">
-                                    <span class="badge text-bg-{{ lcfirst($ticket->priority) }}">{{ $ticket->priority }}</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" style="width: 35%;">Assigned To</th>
-                                <td>
-                                    @if ($ticket->handler_id)
-                                        {{ $ticket->handler->name }}
-                                    @else
-                                        <span class="text-red-600 fw-semibold">Unassigned</span>
-                                    @endif
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" style="width: 35%;">Notes</th>
-                                <td class="text-break">{{ $ticket->notes ? $ticket->notes : '-' }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row" style="width: 35%;">Created</th>
-                                <td>
-                                    <span class="relativeTime" data-full-time="{{ $ticket->created_at->format('d/m/Y • H:i:s') }}">
-                                        {{ $ticket->created_at->diffForHumans() }}
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" style="width: 35%;">Updated</th>
-                                <td>
-                                    <span class="relativeTime" data-full-time="{{ $ticket->updated_at ? $ticket->updated_at->format('d/m/Y • H:i:s') : '-' }}">
-                                        {!! $ticket->updated_at ? $ticket->updated_at->diffForHumans() : '-' !!}
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" style="width: 35%;">Resolved</th>
-                                <td>
-                                    <span class="relativeTime" data-full-time="{{ $ticket->resolved_at ? $ticket->resolved_at->format('d/m/Y • H:i:s') : '-' }}">
-                                        {!! $ticket->resolved_at ? $ticket->resolved_at->diffForHumans() : '-' !!}
-                                    </span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                @include('partials.ticketInfoTable')
 
                 <!-- Edit/Update Ticket -->
                 @if ($ticket->status != 'Closed')
-                    <div class="d-grid mt-3">
-                        @if (Auth::id() == $ticket->handler_id)
-                            <button type="button" class="btn btn-dark fw-bold fs-5 py-2" data-bs-toggle="modal" data-bs-target="#updateTicketModal{{ $ticket->id }}">
-                                Update Ticket
-                            </button>
-                        @elseif (!$ticket->handler_id)
+                    <div class="d-grid gap-2 mt-3">
+                        @if (!$ticket->handler_id)
                             <form method="POST" action="{{ route('ticket.handle', $ticket->id) }}" class="d-grid">
                                 @csrf
                                 @method('PATCH')
@@ -95,10 +27,19 @@
                                     Handle Ticket
                                 </button>
                             </form>
+                        @elseif ($ticket->handler_id == Auth::id())
+                            <button type="button" class="btn btn-dark fw-bold fs-5 py-2" data-bs-toggle="modal" data-bs-target="#updateTicketModal{{ $ticket->id }}">
+                                Update Ticket
+                            </button>
+                            @if ($ticket->requester_id == Auth::id())
+                                <button type="button" class="btn btn-dark fw-bold fs-5 py-2" data-bs-toggle="modal" data-bs-target="#editTicketModal{{ $ticket->id }}">
+                                    Edit Ticket
+                                </button>
+                            @endif
                         @endif
                     </div>
 
-                    @if ($ticket->handler_id)
+                    @if ($ticket->handler_id == Auth::id())
                         <div class="modal fade" id="updateTicketModal{{ $ticket->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
                             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
                                 <div class="modal-content">
@@ -159,7 +100,7 @@
                                             
                                             <div class="vstack gap-2 w-full">
                                                 <button type="button" class="btn btn-success py-2 fw-semibold fs-5" onclick="updateTicket('{{ $ticket->id }}')">Save Changes</button>
-                                                <button type="button" class="btn btn-secondary py-2 fw-semibold fs-5" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="button" class="btn btn-secondary py-2 fw-semibold fs-5" data-bs-dismiss="modal" onclick="resetForm('{{ $ticket->status }}', '{{ $ticket->handler_id }}', '{{ $ticket->handler->name }}')">Cancel</button>
                                             </div>
                                         </form>
                                     </div>
@@ -167,7 +108,14 @@
                             </div>
                         </div>
                     @endif
+                    
+                    @if ($ticket->requester_id == Auth::id())
+                    @endif
                     <script>
+                        // Tooltips
+                        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+                        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
                         function handleTicket(ticketId) {
                             fetch(`/ticket/${ticketId}`, {
                                 method: 'PATCH',
@@ -220,6 +168,11 @@
                             document.getElementById('changeAdminIndicator{{ $ticket->id }}').style.display = (handlerId !== '{{ $ticket->handler_id }}') ? 'block' : 'none';
                         }
 
+                        function resetForm(status, handlerId, handlerName) {
+                            changeStatus(status);
+                            changeHandler(handlerId, handlerName);
+                        }
+
                         function updateTicket(ticketId) {
                             const payload = {
                                 status: document.getElementById(`status${ticketId}`).value,
@@ -246,10 +199,10 @@
                                 
                                 const modalElement = document.getElementById(`updateTicketModal${ticketId}`);
                                 const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
-
                                 modal.hide();
                                 
                                 alert('Ticket updated successfully.');
+                                location.reload();
                             })
                             .catch(error => {
                                 console.error(error);

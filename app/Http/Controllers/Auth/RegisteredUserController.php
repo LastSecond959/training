@@ -23,7 +23,7 @@ class RegisteredUserController extends Controller
             return redirect('/');
         }
         
-        return view('auth.register');
+        return view('menu.welcome');
     }
 
     /**

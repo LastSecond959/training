@@ -20,7 +20,7 @@ class AuthenticatedSessionController extends Controller
             return redirect('/');
         }
         
-        return view('auth.login');
+        return view('menu.welcome');
     }
 
     /**

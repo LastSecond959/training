@@ -20,7 +20,8 @@ Route::middleware(['auth', PreventBackHistory::class])->group(function () {
         Route::post('/new', [TicketController::class, 'store'])->name('store');
         Route::get('/{id}', [TicketController::class, 'show'])->name('show');
         Route::put('/{id}', [TicketController::class, 'update'])->name('update');
-        Route::patch('/{id}', [TicketController::class, 'handle'])->name('handle');
+        Route::patch('/{id}/handle', [TicketController::class, 'handle'])->name('handle');
+        Route::patch('/{id}/changePriority', [TicketController::class, 'changePriority'])->name('changePriority');
     });
     
     // Profile Routes

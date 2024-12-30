@@ -19,22 +19,23 @@
             <tr>
                 <th scope="row" style="width: 35%;">Priority</th>
                 <td class="fs-5">
-                    <span class="badge text-bg-{{ lcfirst($ticket->priority) }}">{{ $ticket->priority }}</span>
+                    <div>
+                        <span class="badge text-bg-{{ lcfirst($ticket->priority) }}">{{ $ticket->priority }}</span>
+                        @if ($ticket->requester_id == Auth::id())
+                            <div class="dropdown">
+                                <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
+                                    <span>Change priority level</span>
+                                </button>
+                                <ul class="dropdown-menu shadow py-0">
+                                    <li><button type="button" class="btn btn-standard dropdown-item rounded-1" onclick="changePriority('{{ $ticket->id }}', 'Standard')">Standard</button></li>
+                                    <li><button type="button" class="btn btn-important dropdown-item rounded-1" onclick="changePriority('{{ $ticket->id }}', 'Important')">Important</button></li>
+                                    <li><button type="button" class="btn btn-urgent dropdown-item rounded-1" onclick="changePriority('{{ $ticket->id }}', 'Urgent')">Urgent</button></li>
+                                </ul>
+                            </div>
+                            <input type="hidden" id="priority{{ $ticket->id }}" name="priority" value="{{ old('priority', $ticket->priority) }}" required>
+                        @endif
+                    </div>
                 </td>
-            </tr>
-            <tr>
-                <th scope="row" style="width: 35%;">Assigned To</th>
-                <td>
-                    @if ($ticket->handler_id)
-                        {{ $ticket->handler->name }}
-                    @else
-                        <span class="text-red-600 fw-semibold">Unassigned</span>
-                    @endif
-                </td>
-            </tr>
-            <tr>
-                <th scope="row" style="width: 35%;">Notes</th>
-                <td class="text-break">{{ $ticket->notes ? $ticket->notes : '-' }}</td>
             </tr>
             <tr>
                 <th scope="row" style="width: 35%;">Created</th>
@@ -77,6 +78,20 @@
                             {!! $ticket->resolved_at ? $ticket->resolved_at->diffForHumans() : '-' !!}
                     </span>
                 </td>
+            </tr>
+            <tr>
+                <th scope="row" style="width: 35%;">Assigned To</th>
+                <td>
+                    @if ($ticket->handler_id)
+                        {{ $ticket->handler->name }}
+                    @else
+                        <span class="text-red-600 fw-semibold">Unassigned</span>
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" style="width: 35%;">Notes</th>
+                <td class="text-break">{{ $ticket->notes ? $ticket->notes : '-' }}</td>
             </tr>
         </tbody>
     </table>

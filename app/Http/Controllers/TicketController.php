@@ -191,6 +191,22 @@ class TicketController extends Controller
         return response()->json(['message' => 'Ticket handled successfully'], 200);
     }
 
+    public function changePriority(Request $request, $id)
+    {
+        if (!Auth::check() || Auth::guest()) {
+            return view('menu.welcome');
+        }
+
+        $request->validate([
+            'priority' => 'required|in:Standard,Important,Urgent',
+        ]);
+        
+        $ticket = Ticket::findOrFail($id);
+        $ticket->update($request->only(['priority']));
+
+        return response()->json(['message' => 'Ticket updated successfully'], 200);
+    }
+
     /**
      * Remove the specified resource from storage.
      */

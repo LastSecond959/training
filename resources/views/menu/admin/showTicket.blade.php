@@ -17,7 +17,7 @@
 
                 <!-- Edit/Update Ticket -->
                 @if ($ticket->status != 'Closed')
-                    <div class="d-grid gap-2 mt-3">
+                    <div class="d-grid mt-3">
                         @if (!$ticket->handler_id)
                             <button type="button" class="btn btn-dark fw-bold fs-5 py-2" onclick="handleTicket('{{ $ticket->id }}')">
                                 Handle Ticket
@@ -94,8 +94,6 @@
                         </div>
                     @endif
                     
-                    @if ($ticket->requester_id == Auth::id())
-                    @endif
                     <script>
                         // Tooltips
                         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');

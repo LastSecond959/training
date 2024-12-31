@@ -24,12 +24,30 @@
                         @if ($ticket->requester_id == Auth::id())
                             <div class="dropdown">
                                 <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
-                                    <span>Change priority level</span>
+                                    <span class="text-primary fw-bold underlineHover">Change priority level</span>
                                 </button>
                                 <ul class="dropdown-menu shadow py-0">
-                                    <li><button type="button" class="btn btn-standard dropdown-item rounded-1" onclick="changePriority('{{ $ticket->id }}', 'Standard')">Standard</button></li>
-                                    <li><button type="button" class="btn btn-important dropdown-item rounded-1" onclick="changePriority('{{ $ticket->id }}', 'Important')">Important</button></li>
-                                    <li><button type="button" class="btn btn-urgent dropdown-item rounded-1" onclick="changePriority('{{ $ticket->id }}', 'Urgent')">Urgent</button></li>
+                                    <li><button
+                                        type="button"
+                                        class="btn btn-standard dropdown-item rounded-1"
+                                        onclick="changePriority('{{ $ticket->id }}', 'Standard')"
+                                        {{ $ticket->priority === 'Standard' ? 'disabled' : '' }}>
+                                            Standard
+                                    </button></li>
+                                    <li><button
+                                        type="button"
+                                        class="btn btn-important dropdown-item rounded-1"
+                                        onclick="changePriority('{{ $ticket->id }}', 'Important')"
+                                        {{ $ticket->priority === 'Important' ? 'disabled' : '' }}>
+                                            Important
+                                    </button></li>
+                                    <li><button
+                                        type="button"
+                                        class="btn btn-urgent dropdown-item rounded-1"
+                                        onclick="changePriority('{{ $ticket->id }}', 'Urgent')"
+                                        {{ $ticket->priority === 'Urgent' ? 'disabled' : '' }}>
+                                            Urgent
+                                    </button></li>
                                 </ul>
                             </div>
                             <input type="hidden" id="priority{{ $ticket->id }}" name="priority" value="{{ old('priority', $ticket->priority) }}" required>

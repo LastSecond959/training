@@ -23,8 +23,8 @@
                         <span class="badge text-bg-{{ lcfirst($ticket->priority) }}">{{ $ticket->priority }}</span>
                         @if ($ticket->requester_id == Auth::id())
                             <div class="dropdown">
-                                <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
-                                    <span class="text-primary fw-bold underlineHover">Change priority level</span>
+                                <button type="button" class="btn dropdown-toggle underlineHover" data-bs-toggle="dropdown">
+                                    <span class="text-primary fw-bold ">Change priority level</span>
                                 </button>
                                 <ul class="dropdown-menu shadow py-0">
                                     <li><button

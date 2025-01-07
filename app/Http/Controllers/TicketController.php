@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 use App\Models\Ticket;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class TicketController extends Controller
 {
@@ -19,10 +20,6 @@ class TicketController extends Controller
         }
         
         $search = $request->input('search');
-        $sortOrder = $request->input('sort', 'default');
-        $statusFilters = (array) $request->input('status', []);
-        $priorityFilters = (array) $request->input('priority', []);
-        $assignedToFilters = (array) $request->input('assigned_to', []);
 
         $query = Ticket::when($search, function($q, $search) {
             $q->where(function($q) use ($search) {
@@ -48,11 +45,11 @@ class TicketController extends Controller
             }
         }
 
-        if ($sortOrder === 'asc') {
-            $query->orderBy('id', 'asc');
-        } elseif ($sortOrder === 'desc') {
-            $query->orderBy('id', 'desc');
-        } else {
+        // if ($sortOrder === 'asc') {
+        //     $query->orderBy('id', 'asc');
+        // } elseif ($sortOrder === 'desc') {
+        //     $query->orderBy('id', 'desc');
+        // } else {
             $query->orderByRaw("
                 CASE 
                     WHEN status = 'Open' THEN 1
@@ -65,7 +62,7 @@ class TicketController extends Controller
                 FIELD(status, 'Open', 'On Hold', 'In Progress', 'Closed'),
                 FIELD(priority, 'Urgent', 'Important', 'Standard')
             ", [Auth::id(), Auth::id()]);
-        }
+        // }
 
         if (Auth::user()->role === 'user') {
             $query->where('requester_id', Auth::id());

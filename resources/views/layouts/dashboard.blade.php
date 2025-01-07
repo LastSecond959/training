@@ -10,7 +10,7 @@
         <!-- Search bar -->
         <form method="GET" action="{{ route('dashboard') }}" class="d-flex align-self-end">
             <div class="input-group w-auto">
-                <input class="form-control" type="search" name="search" placeholder="Search by id or title" value="{{ request()->input('search') }}" id="searchInput" required>
+                <input class="form-control" type="search" name="search" placeholder="Search by id or title" value="{{ request()->input('search') }}" id="searchInput">
                 <button class="input-group-text btn btn-success" type="submit" id="searchButton" disabled>
                     <img src="{{ asset('images/search.svg') }}" alt="Search Icon" style="width: 18px; height: 18px; filter: invert(1);">
                 </button>
@@ -52,76 +52,6 @@
     searchInput.addEventListener('input', toggleButtonState);
     document.addEventListener('DOMContentLoaded', toggleButtonState);
     
-    // Sort
-    let sortState = 0; // 0 = Default, 1 = Ascending, 2 = Descending
-    const sortOrders = ['default', 'asc', 'desc'];
-
-    document.addEventListener("DOMContentLoaded", () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const page = urlParams.get('page');
-        const sort = urlParams.get('sort');
-
-        if (!sort || !page) {
-            const newUrlParams = new URLSearchParams();
-            newUrlParams.set('page', page || '1');
-            newUrlParams.set('sort', sort || 'default');
-
-            history.replaceState({}, '', `${window.location.pathname}?${newUrlParams.toString()}`);
-        }
-    });
-
-    window.onload = function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        const sortOrder = urlParams.get('sort');
-        sortState = sortOrders.indexOf(sortOrder);
-
-        updateButtonText();
-        fetchSortedTickets(sortOrder);
-    };
-
-    function sortTickets() {
-        sortState = (sortState + 1) % 3;
-        const sortOrder = sortOrders[sortState];
-
-        updateButtonText();
-
-        const searchParams = new URLSearchParams(window.location.search);
-        searchParams.set('sort', sortOrder);
-        history.replaceState({}, '', `${window.location.pathname}?${searchParams.toString()}`);
-
-        fetchSortedTickets(sortOrder);
-    }
-
-    function updateButtonText() {
-        const sortButton = document.getElementById('sortButton');
-        const buttonTexts = [
-            'Ticket ID &#9650;&#9660;',
-            'Ticket ID &#9650;',
-            'Ticket ID &#9660;'
-        ];
-        sortButton.innerHTML = buttonTexts[sortState];
-    }
-
-    function fetchSortedTickets(sortOrder) {
-        const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set('sort', sortOrder);
-
-        fetch(`${window.location.pathname}?${urlParams.toString()}`, {
-            method: 'GET',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(response => response.text())
-        .then(html => {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const newTable = doc.querySelector('#ticketListBody');
-            document.querySelector('#ticketListBody').innerHTML = newTable.innerHTML;
-        })
-        .catch(error => console.error('Error fetching sorted tickets:', error));
-    }
-
     // Filter
     function getCheckedValues(groupID) {
         return Array.from(document.querySelectorAll(`#${groupID} input:checked`)).map(input => input.value);

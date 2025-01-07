@@ -91,12 +91,6 @@
                                 Show All
                             </label>
                         </li>
-                        <li class="form-check mb-1">
-                            <input class="form-check-input filter-checkbox" type="checkbox" value="asgToUnassigned" id="asgToUnassigned">
-                            <label class="form-check-label fw-normal" for="asgToUnassigned">
-                                Unassigned
-                            </label>
-                        </li>
                         <li class="form-check mb-0">
                             <input class="form-check-input filter-checkbox" type="checkbox" value="asgToMe" id="asgToMe">
                             <label class="form-check-label fw-normal" for="asgToMe">

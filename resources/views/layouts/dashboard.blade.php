@@ -21,7 +21,7 @@
     <!-- Ticket list -->
     <div class="d-flex flex-column" style="height: 730px;">
         <div class="table-responsive rounded-2">
-            <table class="table table-hover table-bordered align-middle mb-0">
+            <table id="ticketTable" class="table table-hover table-bordered align-middle mb-0">
                 @include('partials.ticketListHeader')
                 @include('partials.ticketListBody')
             </table>
@@ -36,6 +36,8 @@
 </div>
 
 <script>
+    let table = new DataTable('#ticketTable');
+
     // Tooltips
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));

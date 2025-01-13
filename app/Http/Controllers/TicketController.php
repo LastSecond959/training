@@ -13,67 +13,73 @@ class TicketController extends Controller
     /**
      * Display a listing of the resource.
      */
+    // public function index(Request $request)
+    // {
+    //     if (!Auth::check() || Auth::guest()) {
+    //         return view('menu.welcome');
+    //     }
+        
+    //     $query = Ticket::query()->orderByRaw("
+    //         CASE 
+    //             WHEN status = 'Open' THEN 1
+    //             WHEN status = 'On Hold' AND handler_id = ? THEN 2
+    //             WHEN status = 'In Progress' AND handler_id = ? THEN 3
+    //             WHEN status = 'On Hold' THEN 4
+    //             WHEN status = 'In Progress' THEN 5
+    //             ELSE 6
+    //         END,
+    //         FIELD(status, 'Open', 'On Hold', 'In Progress', 'Closed'),
+    //         FIELD(priority, 'Urgent', 'Important', 'Standard')
+    //     ", [Auth::id(), Auth::id()]);
+
+    //     if (Auth::user()->role === 'user') {
+    //         $query->where('requester_id', Auth::id());
+    //     }
+    //     $ticketList = $query->paginate(10)->withQueryString();
+
+    //     return view('layouts.dashboard', compact('ticketList'));
+    // }
+
     public function index(Request $request)
     {
         if (!Auth::check() || Auth::guest()) {
             return view('menu.welcome');
         }
         
-        $search = $request->input('search');
-
-        $query = Ticket::when($search, function($q, $search) {
-            $q->where(function($q) use ($search) {
-                $q->where('title', 'LIKE', "%{$search}%")
-                    ->orWhere('id', $search);
-            });
-        });
-        
-        if (!empty($statusFilters)) {
-            $query->whereIn('status', $statusFilters);
-        }
-
-        if (!empty($priorityFilters)) {
-            $query->whereIn('priority', $priorityFilters);
-        }
-
-        if (!empty($assignedToFilters)) {
-            if (in_array('asgToMe', $assignedToFilters)) {
-                $query->where('handler_id', Auth::id());
-            }
-            if (in_array('asgToUnassigned', $assignedToFilters)) {
-                $query->whereNull('handler_id');
-            }
-        }
-
-        // if ($sortOrder === 'asc') {
-        //     $query->orderBy('id', 'asc');
-        // } elseif ($sortOrder === 'desc') {
-        //     $query->orderBy('id', 'desc');
-        // } else {
-            $query->orderByRaw("
-                CASE 
+            if ($request->ajax()) {
+            $query = Ticket::query()
+                ->leftJoin('users as handlers', 'tickets.handler_id', '=', 'handlers.id')
+                ->select([
+                    'tickets.id',
+                    'tickets.title',
+                    'tickets.status',
+                    'tickets.priority',
+                    'handlers.name as handler_name', // Fetch handler name
+                    'tickets.created_at',
+                    'tickets.updated_at',
+                    'tickets.resolved_at',
+                ])
+                ->orderByRaw("CASE 
                     WHEN status = 'Open' THEN 1
                     WHEN status = 'On Hold' AND handler_id = ? THEN 2
                     WHEN status = 'In Progress' AND handler_id = ? THEN 3
                     WHEN status = 'On Hold' THEN 4
                     WHEN status = 'In Progress' THEN 5
                     ELSE 6
-                END,
-                FIELD(status, 'Open', 'On Hold', 'In Progress', 'Closed'),
-                FIELD(priority, 'Urgent', 'Important', 'Standard')
-            ", [Auth::id(), Auth::id()]);
-        // }
+                END", [Auth::id(), Auth::id()])
+                ->addSelect(['priority' => 'tickets.priority', 'status' => 'tickets.status']);
 
-        if (Auth::user()->role === 'user') {
-            $query->where('requester_id', Auth::id());
+            return DataTables::of($query)
+                ->addColumn('assigned_to', function ($row) {
+                    return $row->handler_name 
+                        ? $row->handler_name 
+                        : '<span class="text-red-600 fw-semibold">Unassigned</span>';
+                })
+                ->rawColumns(['assigned_to']) // Allow raw HTML for this column
+                ->make(true);
         }
-        $ticketList = $query->paginate(10)->withQueryString();
 
-        if ($request->ajax()) {
-            return view('partials.ticketTableBody', compact('ticketList'))->render();
-        }
-        
-        return view('layouts.dashboard', compact('ticketList'));
+        return view('layouts.dashboard');
     }
 
     /**

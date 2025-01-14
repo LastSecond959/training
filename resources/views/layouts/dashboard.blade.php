@@ -17,6 +17,7 @@
                         <th>Created At</th>
                         <th>Updated At</th>
                         <th>Resolved At</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
             </table>
@@ -107,6 +108,7 @@
             { data: 'created_at', name: 'created_at' },
             { data: 'updated_at', name: 'updated_at' },
             { data: 'resolved_at', name: 'resolved_at' },
+            { data: 'action', name: 'action' },
         ],
         columnDefs: [
             { targets: 0, orderable: true },

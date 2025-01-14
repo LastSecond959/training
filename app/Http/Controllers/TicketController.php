@@ -89,7 +89,15 @@ class TicketController extends Controller
                 END", [Auth::id(), Auth::id()]);
             }
 
-            return DataTables::of($query)->make(true);
+            if (Auth::user()->role === 'user') {
+                $query->where('requester_id', Auth::id());
+            }
+
+            return DataTables::of($query)
+                ->addColumn('action', function ($ticket) {
+                    return '<a href="' . route('ticket.show', $ticket->id) . '" class="btn btn-primary">View</a>';
+                })
+                ->make(true);
         }
 
         return view('layouts.dashboard');
@@ -135,11 +143,12 @@ class TicketController extends Controller
     {
         // Show the ticket details
         $ticket = Ticket::findOrFail($id);
-        $adminList = User::where('role', 'admin')->get();
 
         if ($ticket->requester_id === Auth::id() && Auth::user()->role === 'user') {
             return view('menu.user.showTicket', compact('ticket'));
         } elseif (Auth::user()->role === 'admin') {
+            $adminList = User::where('role', 'admin')->get();
+
             return view('menu.admin.showTicket', compact('ticket', 'adminList'));
         }
 

@@ -45,8 +45,8 @@ class TicketController extends Controller
         if (!Auth::check() || Auth::guest()) {
             return view('menu.welcome');
         }
-        
-            if ($request->ajax()) {
+
+        if ($request->ajax()) {
             $query = Ticket::query()
                 ->leftJoin('users as handlers', 'tickets.handler_id', '=', 'handlers.id')
                 ->select([
@@ -54,29 +54,42 @@ class TicketController extends Controller
                     'tickets.title',
                     'tickets.status',
                     'tickets.priority',
-                    'handlers.name as handler_name', // Fetch handler name
+                    'handlers.name as assigned_to',
                     'tickets.created_at',
                     'tickets.updated_at',
                     'tickets.resolved_at',
-                ])
-                ->orderByRaw("CASE 
+                ]);
+
+            $columns = [
+                0 => 'tickets.id',
+                1 => 'tickets.title',
+                2 => 'tickets.status',
+                3 => 'tickets.priority',
+                4 => 'handlers.name',
+                5 => 'tickets.created_at',
+                6 => 'tickets.updated_at',
+                7 => 'tickets.resolved_at',
+            ];
+
+            if ($request->has('order')) {
+                $columnIndex = $request->input('order.0.column'); // Get the index of the column to sort
+                $sortDirection = $request->input('order.0.dir');  // Get the sort direction (asc/desc)
+
+                if (isset($columns[$columnIndex])) {
+                    $query->orderBy($columns[$columnIndex], $sortDirection);
+                }
+            } else {
+                $query->orderByRaw("CASE 
                     WHEN status = 'Open' THEN 1
                     WHEN status = 'On Hold' AND handler_id = ? THEN 2
                     WHEN status = 'In Progress' AND handler_id = ? THEN 3
                     WHEN status = 'On Hold' THEN 4
                     WHEN status = 'In Progress' THEN 5
                     ELSE 6
-                END", [Auth::id(), Auth::id()])
-                ->addSelect(['priority' => 'tickets.priority', 'status' => 'tickets.status']);
+                END", [Auth::id(), Auth::id()]);
+            }
 
-            return DataTables::of($query)
-                ->addColumn('assigned_to', function ($row) {
-                    return $row->handler_name 
-                        ? $row->handler_name 
-                        : '<span class="text-red-600 fw-semibold">Unassigned</span>';
-                })
-                ->rawColumns(['assigned_to']) // Allow raw HTML for this column
-                ->make(true);
+            return DataTables::of($query)->make(true);
         }
 
         return view('layouts.dashboard');

@@ -1,7 +1,7 @@
 <!-- Session Status -->
 <x-auth-session-status class="mb-4" :status="session('status')" />
 
-<form method="POST" action="{{ route('login') }}">
+<form method="POST" action="{{ route('login') }}" id="login-form">
     @csrf
 
     <!-- Email Address -->
@@ -59,15 +59,30 @@
         @endif
     </div>
 
-    <script>
-        function forgotPassword() {
-            document.getElementById("welcome.loginForm").classList.add("hidden");
-        }
-    </script>
-
     <div class="flex items-center justify-center mt-5">
         <x-primary-button class="w-full">
             <span class="text-lg text-center w-full">{{ __('Log In') }}</span>
         </x-primary-button>
     </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('remember_me').checked;
+
+            fetch('{{ route('login') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                },
+                body: JSON.stringify({ email, password, remember })
+            })
+            .then(response => location.reload())
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
 </form>

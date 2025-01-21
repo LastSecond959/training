@@ -7,7 +7,7 @@ use App\Http\Middleware\PreventBackHistory;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
-Route::middleware('guest')->group(function () {
+Route::middleware(['guest', PreventBackHistory::class])->group(function () {
     Route::view('/', 'menu.welcome')->name('welcome');
 });
 

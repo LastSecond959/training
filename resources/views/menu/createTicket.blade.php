@@ -3,7 +3,7 @@
 @section('title', 'Create New Ticket')
 
 @section('content')
-<div class="container">
+<div class="container px-5 pt-2">
     <h4 class="mt-2 py-4">Create New Ticket</h4>
 
     <form method="POST" action="{{ route('ticket.create') }}">

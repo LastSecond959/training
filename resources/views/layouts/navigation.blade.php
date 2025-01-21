@@ -4,7 +4,7 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
-                <div class="shrink-0 flex items-center">
+                <div class="shrink-0 flex items-center ms-2">
                     <a href="{{ route('dashboard') }}">
                         <img src="{{ asset('images/logo-cjfi.png') }}" alt="Company Logo" width="40" height="40">
                     </a>

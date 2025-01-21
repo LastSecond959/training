@@ -21,6 +21,10 @@
 
         <!-- Styles -->
         <style>
+            #ticketTable td {
+                padding: 12px 8px 12px 16px;
+            }
+
             /* Status */
             .btn-open {
                 --bs-btn-color: white;

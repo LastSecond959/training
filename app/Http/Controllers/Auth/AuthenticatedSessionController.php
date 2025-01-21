@@ -31,10 +31,6 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
 
-        if ($request->ajax()) {
-            return response()->json(['redirect_url' => route('dashboard', absolute: false)]);
-        }
-        
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

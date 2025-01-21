@@ -3,28 +3,23 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<div class="container px-5 pt-4">
-    <div class="d-flex flex-column">
-        <div class="table-responsive">
-            <table id="ticketTable" class="table table-hover table-bordered align-middle mb-0">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Ticket ID</th>
-                        <th>Title</th>
-                        <th>Status</th>
-                        <th>Priority</th>
-                        <th>Assigned To</th>
-                        <th>Created At</th>
-                        <th>Updated At</th>
-                        <th>Resolved At</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-        <em class="small text-muted ms-1 mb-0">
-            *<span class="fw-semibold">Closed tickets</span> will be hidden after <span class="fw-semibold">14 days</span>
-        </em>
+<div class="container px-4 pt-4">
+    <div class="table-responsive d-flex flex-column" style="width: 100%;">
+        <table id="ticketTable" class="table table-hover table-bordered align-middle mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th class="p-3">Ticket ID</th>
+                    <th class="p-3">Title</th>
+                    <th class="p-3">Status</th>
+                    <th class="p-3">Priority</th>
+                    <th class="p-3">Assigned To</th>
+                    <th class="p-3">Created At</th>
+                    <th class="p-3">Updated At</th>
+                    <th class="p-3">Resolved At</th>
+                    <th class="p-3">Action</th>
+                </tr>
+            </thead>
+        </table>
     </div>
 </div>
 
@@ -47,29 +42,37 @@
         layout: {
             topStart: {
                 div: {
-                    html: '<h4 class="m-0">{{ Auth::user()->role === 'admin' ? 'List of Tickets' : 'My Tickets' }}</h4>',
+                    html: `<h4 class="m-0">{{ Auth::user()->role === 'admin' ? 'List of Tickets' : 'My Tickets' }}</h4>`,
                 },
             },
             topEnd: {
                 search: {
-                    placeholder: 'Search by ID or title...',
+                    placeholder: 'Search by id or title...',
                     processing: true,
                 },
             },
-            bottomStart: null,
+            bottomStart: {
+                div: {
+                    html: `<em class="small text-muted ms-1 mb-0">
+                                *<span class="fw-semibold">Closed tickets</span> will be hidden after <span class="fw-semibold">14 days</span>
+                            </em>`,
+                }
+            },
             bottomEnd: 'paging',
         },
         columns: [
             {
                 data: 'id',
                 name: 'id',
+                width: '10%',
                 render: function(data, type, row) {
-                    return '<span class="fw-semibold">#' + data + '</span>';
+                    return `<span class="fw-semibold">#${data}</span>`;
                 },
             },
             {
                 data: 'title',
                 name: 'title',
+                width: '20%',
                 render: function(data, type, row) {
                     return `
                         <span
@@ -87,28 +90,31 @@
             {
                 data: 'status',
                 name: 'status',
+                width: '10%',
                 render: function(data, type, row) {
-                    return '<span class="badge text-bg-' + data.toLowerCase().replace(' ', '-') + ' fs-6">' + data + '</span>';
+                    return `<span class="badge text-bg-${data.toLowerCase().replace(' ', '-')} fs-6">${data}</span>`;
                 },
             },
             {
                 data: 'priority',
                 name: 'priority',
+                width: '10%',
                 render: function(data, type, row) {
-                    return '<span class="badge text-bg-' + data.charAt(0).toLowerCase() + data.slice(1) + ' fs-6">' + data + '</span>';
+                    return `<span class="badge text-bg-${data.charAt(0).toLowerCase()}${data.slice(1)} fs-6">${data}</span>`;
                 },
             },
             {
                 data: 'assigned_to',
                 name: 'handler',
+                width: '10%',
                 render: function(data, type, row) {
-                    return data ? data : '<span class="text-red-600 fw-semibold">Unassigned</span>';
+                    return data ? data : `<span class="text-red-600 fw-semibold">Unassigned</span>`;
                 },
             },
-            { data: 'created_at', name: 'created_at' },
-            { data: 'updated_at', name: 'updated_at' },
-            { data: 'resolved_at', name: 'resolved_at' },
-            { data: 'action', name: 'action' },
+            { data: 'created_at', name: 'created_at', width: '10%' },
+            { data: 'updated_at', name: 'updated_at', width: '10%' },
+            { data: 'resolved_at', name: 'resolved_at', width: '10%' },
+            { data: 'action', name: 'action', width: '5%', className: 'px-2 text-center' },
         ],
         columnDefs: [
             { targets: 0, orderable: true },
@@ -138,11 +144,10 @@
             },
         ],
         order: [],
-        // pageLength: 20,
+        // pageLength: 15,
         language: {
             info: 'Page _PAGE_ of _PAGES_',
         },
-        serverSide: true,
         ajax: {
             url: '/dashboard',
             type: 'GET',
@@ -150,6 +155,8 @@
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
         },
+        serverSide: true,
+        processing: true,
         drawCallback: function (settings) {
             document.getElementById('dt-search-0').classList.remove('form-control-sm');
         },

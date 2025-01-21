@@ -95,8 +95,9 @@ class TicketController extends Controller
 
             return DataTables::of($query)
                 ->addColumn('action', function ($ticket) {
-                    return '<a href="' . route('ticket.show', $ticket->id) . '" class="btn btn-primary">View</a>';
+                    return '<a href="' . route('ticket.show', $ticket->id) . '" class="btn btn-secondary">View</a>';
                 })
+                ->rawColumns(['action'])
                 ->make(true);
         }
 

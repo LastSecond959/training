@@ -49,16 +49,21 @@
                 search: {
                     placeholder: 'Search by id or title...',
                     processing: true,
-                },
+                },  
             },
             bottomStart: {
                 div: {
-                    html: `<em class="small text-muted ms-1 mb-0">
-                                *<span class="fw-semibold">Closed tickets</span> will be hidden after <span class="fw-semibold">14 days</span>
-                            </em>`,
-                }
+                    html: `<em class="small text-muted ms-1 my-0 me-0">
+                            *<span class="fw-semibold">Closed tickets</span> will be hidden after <span class="fw-semibold">14 days</span>
+                        </em>`,
+                },
             },
-            bottomEnd: 'paging',
+            bottomEnd: {
+                paging: {
+                    firstLast: false,
+                },
+            },
+            bottom1: 'info',
         },
         columns: [
             {
@@ -72,7 +77,7 @@
             {
                 data: 'title',
                 name: 'title',
-                width: '20%',
+                width: '15%',
                 render: function(data, type, row) {
                     return `
                         <span
@@ -144,9 +149,10 @@
             },
         ],
         order: [],
-        // pageLength: 15,
         language: {
             info: 'Page _PAGE_ of _PAGES_',
+            infoEmpty: 'No records available',
+            infoFiltered: ' • Showing _TOTAL_ filtered result(s)',
         },
         ajax: {
             url: '/dashboard',
@@ -157,6 +163,8 @@
         },
         serverSide: true,
         processing: true,
+        stateSave: true,
+        stateDuration: -1,
         drawCallback: function (settings) {
             document.getElementById('dt-search-0').classList.remove('form-control-sm');
         },

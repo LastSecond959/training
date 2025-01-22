@@ -50,9 +50,17 @@
 
                             <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault();
-                                                this.closest('form').submit();">
+                                    clearTableState();
+                                    this.closest('form').submit();">
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
+
+                            <script>
+                                function clearTableState() {
+                                    let table = new DataTable('#ticketTable');
+                                    table.state.clear();
+                                }
+                            </script>
                         </form>
                     </x-slot>
                 </x-dropdown>

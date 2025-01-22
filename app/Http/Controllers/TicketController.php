@@ -80,13 +80,23 @@ class TicketController extends Controller
                 }
             } else {
                 $query->orderByRaw("CASE 
-                    WHEN status = 'Open' THEN 1
-                    WHEN status = 'On Hold' AND handler_id = ? THEN 2
-                    WHEN status = 'In Progress' AND handler_id = ? THEN 3
-                    WHEN status = 'On Hold' THEN 4
-                    WHEN status = 'In Progress' THEN 5
-                    ELSE 6
-                END", [Auth::id(), Auth::id()]);
+                    WHEN status = 'Open' AND priority = 'Urgent' THEN 1
+                    WHEN status = 'Open' AND priority = 'Important' THEN 2
+                    WHEN status = 'Open' AND priority = 'Standard' THEN 3
+                    WHEN status = 'On Hold' AND priority = 'Urgent' AND handler_id = ? THEN 4
+                    WHEN status = 'On Hold' AND priority = 'Important' AND handler_id = ? THEN 5
+                    WHEN status = 'On Hold' AND priority = 'Standard' AND handler_id = ? THEN 6
+                    WHEN status = 'In Progress' AND priority = 'Urgent' AND handler_id = ? THEN 7
+                    WHEN status = 'In Progress' AND priority = 'Important' AND handler_id = ? THEN 8
+                    WHEN status = 'In Progress' AND priority = 'Standard' AND handler_id = ? THEN 9
+                    WHEN status = 'On Hold' AND priority = 'Urgent' THEN 10
+                    WHEN status = 'On Hold' AND priority = 'Important' THEN 11
+                    WHEN status = 'On Hold' AND priority = 'Standard' THEN 12
+                    WHEN status = 'In Progress' AND priority = 'Urgent' THEN 13
+                    WHEN status = 'In Progress' AND priority = 'Important' THEN 14
+                    WHEN status = 'In Progress' AND priority = 'Standard' THEN 15
+                    ELSE 16
+                END", [Auth::id(), Auth::id(), Auth::id(), Auth::id(), Auth::id(), Auth::id()]);
             }
 
             if (Auth::user()->role === 'user') {
@@ -125,7 +135,7 @@ class TicketController extends Controller
         ]);
         
         // Create a new ticket
-        Ticket::create([
+        $ticket = Ticket::create([
             'title' => $validatedData['title'],
             'description' => $validatedData['description'],
             'requester_id' => Auth::id(),
@@ -134,7 +144,11 @@ class TicketController extends Controller
             'updated_at' => null,
         ]);
 
-        return redirect()->route('dashboard');
+        return response()->json([
+            'message' => 'Ticket created successfully!',
+            'ticket_id' => $ticket->id,
+            'redirect_url' => route('ticket.show', ['id' => $ticket->id]),
+        ], 200);
     }
 
     /**
@@ -189,17 +203,6 @@ class TicketController extends Controller
             }
             
             $ticket->save();
-
-        } elseif (Auth::user()->role === 'user') {
-
-            $request->validate([
-                'title' => 'required|max:255',
-                'description' => 'required',
-                'priority' => 'required|in:Standard,Important,Urgent',
-            ]);
-            
-            $ticket = Ticket::findOrFail($id);
-            $ticket->update($request->only(['title', 'description', 'priority']));
 
         }
 

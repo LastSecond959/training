@@ -7,39 +7,13 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Models\Ticket;
 use App\Models\User;
+use Carbon\Carbon;
 
 class TicketController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    // public function index(Request $request)
-    // {
-    //     if (!Auth::check() || Auth::guest()) {
-    //         return view('menu.welcome');
-    //     }
-        
-    //     $query = Ticket::query()->orderByRaw("
-    //         CASE 
-    //             WHEN status = 'Open' THEN 1
-    //             WHEN status = 'On Hold' AND handler_id = ? THEN 2
-    //             WHEN status = 'In Progress' AND handler_id = ? THEN 3
-    //             WHEN status = 'On Hold' THEN 4
-    //             WHEN status = 'In Progress' THEN 5
-    //             ELSE 6
-    //         END,
-    //         FIELD(status, 'Open', 'On Hold', 'In Progress', 'Closed'),
-    //         FIELD(priority, 'Urgent', 'Important', 'Standard')
-    //     ", [Auth::id(), Auth::id()]);
-
-    //     if (Auth::user()->role === 'user') {
-    //         $query->where('requester_id', Auth::id());
-    //     }
-    //     $ticketList = $query->paginate(10)->withQueryString();
-
-    //     return view('layouts.dashboard', compact('ticketList'));
-    // }
-
     public function index(Request $request)
     {
         if (!Auth::check() || Auth::guest()) {
@@ -51,14 +25,28 @@ class TicketController extends Controller
                 ->leftJoin('users as handlers', 'tickets.handler_id', '=', 'handlers.id')
                 ->select([
                     'tickets.id',
-                    'tickets.title',
+                    'tickets.title',    
                     'tickets.status',
                     'tickets.priority',
                     'handlers.name as assigned_to',
                     'tickets.created_at',
                     'tickets.updated_at',
                     'tickets.resolved_at',
-                ]);
+                ])
+                ->where(function ($query) {
+                    $query->whereNull('tickets.resolved_at')
+                        ->orWhere('tickets.resolved_at', '>=', Carbon::now()->subWeeks(2));
+                });
+
+            if ($request->has('status') && !empty($request->status)) {
+                $query->whereIn('tickets.status', $request->status);
+            }
+            if ($request->has('priority') && !empty($request->priority)) {
+                $query->whereIn('tickets.priority', $request->priority);
+            }
+            if ($request->has('assignedTo') && !empty($request->assignedTo)) {
+                $query->whereIn('tickets.handler_id', $request->assignedTo);
+            }
 
             $columns = [
                 0 => 'tickets.id',

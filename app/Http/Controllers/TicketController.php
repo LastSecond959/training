@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Models\Comment;
 use Carbon\Carbon;
 
 class TicketController extends Controller
@@ -46,6 +47,9 @@ class TicketController extends Controller
             }
             if ($request->has('assignedTo') && !empty($request->assignedTo)) {
                 $query->whereIn('tickets.handler_id', $request->assignedTo);
+            }
+            if ($request->has('myTickets') && !empty($request->myTickets)) {
+                $query->whereIn('tickets.requester_id', $request->myTickets);
             }
 
             $columns = [
@@ -146,13 +150,14 @@ class TicketController extends Controller
     {
         // Show the ticket details
         $ticket = Ticket::findOrFail($id);
+        $comments = Comment::where('ticket_id', $id)->orderBy('created_at', 'asc')->get();
 
         if ($ticket->requester_id === Auth::id() && Auth::user()->role === 'user') {
-            return view('menu.user.showTicket', compact('ticket'));
+            return view('menu.user.showTicket', compact('ticket', 'comments'));
         } elseif (Auth::user()->role === 'admin') {
             $adminList = User::where('role', 'admin')->get();
 
-            return view('menu.admin.showTicket', compact('ticket', 'adminList'));
+            return view('menu.admin.showTicket', compact('ticket', 'comments', 'adminList'));
         }
 
         return redirect()->route('dashboard');
@@ -222,6 +227,18 @@ class TicketController extends Controller
         $ticket->update($request->only(['priority']));
 
         return response()->json(['message' => 'Ticket updated successfully'], 200);
+    }
+
+    public function reopen($id)
+    {
+        $ticket = Ticket::findOrFail($id);
+        $ticket->title = $ticket->title . ' (Reopened)';
+        $ticket->status = 'In Progress';
+        $ticket->resolved_at = null;
+        
+        $ticket->save();
+        
+        return response()->json(['message' => 'Ticket reopened successfully'], 200);
     }
 
     /**

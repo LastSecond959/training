@@ -53,4 +53,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Ticket::class, 'handler_id');
     }
+
+    // Relationship for comments made by the user
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'user_id');
+    }
 }

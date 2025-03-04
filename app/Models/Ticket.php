@@ -26,4 +26,10 @@ class Ticket extends Model
     {
         return $this->belongsTo(User::class, 'handler_id');
     }
+
+    // Relationship to comments made on the ticket
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'ticket_id');
+    }
 }

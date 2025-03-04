@@ -21,7 +21,7 @@
                 <td class="fs-5">
                     <div>
                         <span class="badge text-bg-{{ lcfirst($ticket->priority) }}">{{ $ticket->priority }}</span>
-                        @if ($ticket->requester_id == Auth::id())
+                        @if ($ticket->requester_id == Auth::id() && $ticket->status !== 'Closed')
                             <div class="dropdown">
                                 <button type="button" class="btn btn-link dropdown-toggle p-0" data-bs-toggle="dropdown">
                                     Change priority level
@@ -113,4 +113,9 @@
             </tr>
         </tbody>
     </table>
+
+    <script>
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    </script>
 </div>

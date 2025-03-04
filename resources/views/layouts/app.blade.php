@@ -18,11 +18,69 @@
         <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
         <script src="https://cdn.datatables.net/2.2.1/js/dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/2.2.1/js/dataTables.bootstrap5.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.13/dayjs.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.13/plugin/relativeTime.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.13/plugin/updateLocale.js"></script>
 
         <!-- Styles -->
         <style>
             #ticketTable td {
                 padding: 12px 8px 12px 16px;
+            }
+
+            [type=text]:focus,
+            input:where(:not([type])):focus,
+            [type=email]:focus,
+            [type=url]:focus,
+            [type=password]:focus,
+            [type=number]:focus,
+            [type=date]:focus,
+            [type=datetime-local]:focus,
+            [type=month]:focus,
+            [type=search]:focus,
+            [type=tel]:focus,
+            [type=time]:focus,
+            [type=week]:focus,
+            [multiple]:focus,
+            textarea:focus,
+            select:focus {
+                --tw-ring-color: black;
+                border-color: black;
+            }
+
+            .chat-container {
+                padding: 10px;
+                border-top: 2px solid #198754;
+                border-radius: 8px;
+                background: white;
+            }
+
+            .comment-box {
+                padding: 8px 12px;
+                height: 300px;
+                border-radius: var(--bs-border-radius);
+                background: #f5f5f5;
+                border: 1px solid #dee2e6;
+                overflow-y: scroll;
+            }
+
+            .comment-textarea {
+                display: block;
+                width: 100%;
+                padding: 8px 10px;
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 1.5;
+                color: black;
+                background: #f5fcf5;
+                border: 1px solid #dee2e6;
+                border-radius: var(--bs-border-radius);
+                appearance: none;
+                min-height: 40px;
+                max-height: 225px;
+                resize: none;
+                overflow-y: auto;
+                transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
             }
 
             /* Status */

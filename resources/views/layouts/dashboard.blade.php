@@ -24,19 +24,60 @@
 </div>
 
 <script>
-    function getRelativeTimeString(date, lang = navigator.language) {
-        const timeMs = typeof date === "number" ? date : date.getTime();
-        const deltaSeconds = Math.round((timeMs - Date.now()) / 1000);
+    // function getRelativeTimeString(date, lang = navigator.language) {
+    //     const timeMs = typeof date === "number" ? date : date.getTime();
+    //     const deltaSeconds = Math.round((timeMs - Date.now()) / 1000);
 
-        const cutoffs = [60, 3600, 86400, 86400 * 7, 86400 * 30, 86400 * 365, Infinity];
-        const units = ["second", "minute", "hour", "day", "week", "month", "year"];
+    //     const cutoffs = [60, 3600, 86400, 86400 * 7, 86400 * 30, 86400 * 365, Infinity];
+    //     const units = ["second", "minute", "hour", "day", "week", "month", "year"];
 
-        const unitIndex = cutoffs.findIndex(cutoff => cutoff > Math.abs(deltaSeconds));
-        const divisor = unitIndex ? cutoffs[unitIndex - 1] : 1;
+    //     const unitIndex = cutoffs.findIndex(cutoff => cutoff > Math.abs(deltaSeconds));
+    //     const divisor = unitIndex ? cutoffs[unitIndex - 1] : 1;
 
-        const rtf = new Intl.RelativeTimeFormat(lang, { numeric: "auto" });
-        return rtf.format(Math.floor(deltaSeconds / divisor), units[unitIndex]);
-    }
+    //     const rtf = new Intl.RelativeTimeFormat(lang, { numeric: "auto" });
+    //     return rtf.format(Math.floor(deltaSeconds / divisor), units[unitIndex]);
+    // }
+
+    dayjs.extend(window.dayjs_plugin_relativeTime, {
+        thresholds: [
+            { l: 's', r: 1 },
+            { l: 'ss', r: 59, d: 'second' },
+            { l: 'm', r: 1 },
+            { l: 'mm', r: 59, d: 'minute' },
+            { l: 'h', r: 1 },
+            { l: 'hh', r: 23, d: 'hour' },
+            { l: 'd', r: 1},
+            { l: 'dd', r: 6, d: 'day' },
+            { l: 'w', r: 1, },
+            { l: 'ww', r: 3, d: 'week' },
+            { l: 'M', r: 1 },
+            { l: 'MM', r: 11, d: 'month' },
+            { l: 'y', r: 1 },
+            { l: 'yy', d: 'year' }
+        ],
+        rounding: Math.floor
+    });
+
+    dayjs.extend(window.dayjs_plugin_updateLocale).updateLocale('en', {
+        relativeTime: {
+            future: 'in %s',
+            past: '%s ago',
+            s: '%d second',
+            ss: '%d seconds',
+            m: '%d minute',
+            mm: '%d minutes',
+            h: '%d hour',
+            hh: '%d hours',
+            d: '%d day',
+            dd: '%d days',
+            w: '%d week',
+            ww: '%d weeks',
+            M: '%d month',
+            MM: '%d months',
+            y: '%d year',
+            yy: '%d years'
+        }
+    });
 
     let table = new DataTable('#ticketTable', {
         layout: {
@@ -109,11 +150,17 @@
                                     </div>
                                     @if (Auth::user()->role === 'admin')
                                         <div class="col">
-                                            <h6 class="fw-semibold">Assigned To</h6>
+                                            <h6 class="fw-semibold">Options</h6>
                                             <div class="form-check mb-1">
                                                 <input class="form-check-input" type="checkbox" value="{{ Auth::id() }}" id="assignedToMe">
                                                 <label class="form-check-label" for="assignedToMe">
                                                     Assigned to Me
+                                                </label>
+                                            </div>
+                                            <div class="form-check mb-0">
+                                                <input class="form-check-input" type="checkbox" value="{{ Auth::id() }}" id="myTickets">
+                                                <label class="form-check-label" for="myTickets">
+                                                    My Tickets
                                                 </label>
                                             </div>
                                         </div>
@@ -217,10 +264,11 @@
                 targets: [5, 6, 7],
                 render: function(data, type, row) {
                     if (!data) return `<span style="cursor: help;">-</span>`;
-                    const date = new Date(data);
-                    const formattedDate = date.toLocaleDateString('en-GB');
-                    const time = date.toLocaleString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-                    const timeAgo = getRelativeTimeString(date);
+
+                    const date = dayjs(data);
+                    const formattedDate = date.format("DD/MM/YYYY");
+                    const time = date.format("HH:mm:ss");
+                    const timeAgo = date.fromNow();
 
                     return `
                         <span
@@ -228,8 +276,7 @@
                             data-bs-title="${formattedDate} <br> ${time}"
                             data-bs-html="true"
                             data-bs-animation="false"
-                            style="cursor: help;"
-                        >
+                            style="cursor: help;">
                             ${timeAgo}
                         </span>
                     `;
@@ -246,12 +293,13 @@
             url: '/dashboard',
             type: 'GET',
             headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
             },
             data: function (d) {
                 d.status = getCheckedValues("status");
                 d.priority = getCheckedValues("priority");
                 d.assignedTo = getCheckedValues("assignedTo");
+                d.myTickets = getCheckedValues("myTickets");
             },
         },
         serverSide: true,
@@ -279,6 +327,7 @@
             status: getCheckedValues("status"),
             priority: getCheckedValues("priority"),
             assignedTo: getCheckedValues("assignedTo"),
+            myTickets: getCheckedValues("myTickets"),
         };
         sessionStorage.setItem("filterState", JSON.stringify(filters));
     }
@@ -289,6 +338,7 @@
             restoreCheckboxState("status", filters.status);
             restoreCheckboxState("priority", filters.priority);
             restoreCheckboxState("assignedTo", filters.assignedTo);
+            restoreCheckboxState("myTickets", filters.myTickets);
 
             if (applyReload) {
                 table.ajax.reload();
@@ -312,12 +362,14 @@
         document.querySelectorAll(".dropdown-menu input").forEach(input => input.checked = false);
         sessionStorage.removeItem("filterState");
         table.state.clear();
+
+        saveFilterState();
+        table.state.save();
         table.ajax.reload();
     });
 
     loadFilterState(true);
 
-    // Tooltips
     table.on('draw.dt', function() {
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));

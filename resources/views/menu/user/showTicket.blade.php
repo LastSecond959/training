@@ -15,22 +15,16 @@
         <div class="col-4">
             @include('partials.ticketInfoTable')
 
-            @if ($ticket->status != 'Closed')
+            @if ($ticket->status !== 'Closed')
                 <script>
-                    // Tooltips
-                    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-                    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-                    
                     function changePriority(ticketId, priorityVal) {
-                        const payload = { priority: priorityVal };
-
                         fetch(`/ticket/${ticketId}/changePriority`, {
                             method: 'PATCH',
                             headers: {
                                 'Content-Type': 'application/json',
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                             },
-                            body: JSON.stringify(payload),
+                            body: JSON.stringify({ priority: priorityVal }),
                         })
                         .then(response => {
                             if (!response.ok) {
@@ -48,8 +42,42 @@
                         });
                     }
                 </script>
+            @else
+                <div class="d-grid mt-1">
+                    <button type="button" class="btn btn-dark fw-bold fs-5 py-2" onclick="reopenTicket('{{ $ticket->id }}')">
+                        Reopen Ticket
+                    </button>
+                </div>
+                <script>
+                    function reopenTicket(ticketId) {
+                        fetch(`/ticket/${ticketId}/reopen`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            },
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Failed to reopen the ticket.');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            location.reload();
+                        })
+                        .catch(error => {
+                            console.error(error);
+                            alert('An error occurred.');
+                        });
+                    }
+                </script>
             @endif
         </div>
     </div>
+
+    <hr style="border-bottom: 2px solid black;">
+
+    @include('partials.ticketCommentSection')
 </div>
 @endsection

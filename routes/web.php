@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CommentController;
 use App\Http\Middleware\PreventBackHistory;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -19,9 +20,11 @@ Route::middleware(['auth', PreventBackHistory::class])->group(function () {
         Route::get('/new', [TicketController::class, 'create'])->name('create');
         Route::post('/new', [TicketController::class, 'store'])->name('store');
         Route::get('/{id}', [TicketController::class, 'show'])->name('show');
-        Route::put('/{id}', [TicketController::class, 'update'])->name('update');
         Route::patch('/{id}/handle', [TicketController::class, 'handle'])->name('handle');
+        Route::put('/{id}', [TicketController::class, 'update'])->name('update');
         Route::patch('/{id}/changePriority', [TicketController::class, 'changePriority'])->name('changePriority');
+        Route::patch('/{id}/reopen', [TicketController::class, 'reopen'])->name('reopen');
+        Route::post('/{id}/comment', [CommentController::class, 'store'])->name('comment');
     });
     
     // Profile Routes

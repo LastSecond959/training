@@ -78,7 +78,8 @@
 
         const commentForm = document.getElementById("commentForm");
         const messageInput = document.getElementById("messageInput");
-        
+        const commentContainer = document.getElementById("comments");
+
         commentContainer.scrollTop = commentContainer.scrollHeight;
 
         commentForm.addEventListener("submit", function (event) {
@@ -95,7 +96,6 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    const commentContainer = document.getElementById("comments");
                     // const newComment = document.createElement("div");
 
                     // const createdAt = dayjs(data.created_at);
